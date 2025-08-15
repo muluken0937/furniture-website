@@ -2,6 +2,7 @@
 
 // src/components/Header.js
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 
 export default function Header() {
@@ -52,8 +53,14 @@ export default function Header() {
           <div className="flex justify-between items-center py-4">
             {/* Logo */}
             <Link href="/" className="text-2xl font-bold text-primary flex items-center">
-              <div className="bg-primary w-10 h-10 rounded-full mr-2"></div>
-              FurniCraft
+              <Image 
+                src="/images/logo.png" 
+                alt="Karis Furniture Logo" 
+                width={40} 
+                height={40} 
+                className="mr-2"
+              />
+              Karis Furniture
             </Link>
             
             {/* Desktop Navigation */}
