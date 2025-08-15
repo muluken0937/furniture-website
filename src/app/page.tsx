@@ -5,6 +5,29 @@ import Footer from '@/components/Footer';
 import Image from 'next/image';
 
 export default function Home() {
+  const categories = [
+    {
+      name: 'Sofas',
+      image: '/images/gray-sofa.jpeg',
+      productCount: '12 products'
+    },
+    {
+      name: 'Beds',
+      image: '/images/wooden-bed.jpg',
+      productCount: '8 products'
+    },
+    {
+      name: 'Dining',
+      image: '/images/dinning table.webp',
+      productCount: '15 products'
+    },
+    {
+      name: 'Office',
+      image: '/images/office table.jpeg',
+      productCount: '10 products'
+    }
+  ];
+
   const heroFeatures = [
     {
       title: "Free Shipping",
@@ -51,16 +74,15 @@ export default function Home() {
       
       {/* Enhanced Hero Section */}
       <section className="relative">
-        {/* Background image with overlay */}
+        {/* Background image */}
         <div className="absolute inset-0 z-0">
           <Image 
-            src="/images/gray-sofa.jpeg" 
+            src="/images/hero.png" 
             alt="Luxury Furniture" 
             fill
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-black bg-opacity-40" />
         </div>
         
         {/* Hero content */}
@@ -86,11 +108,18 @@ export default function Home() {
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">Shop by Category</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {['Sofas', 'Beds', 'Dining', 'Office'].map((category, index) => (
+              {categories.map((category, index) => (
                 <div key={index} className="bg-gray-50 rounded-xl p-6 text-center hover:bg-primary hover:text-white transition duration-300 cursor-pointer group">
-                  <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16 mx-auto mb-4 group-hover:bg-white" />
-                  <h3 className="text-xl font-semibold">{category}</h3>
-                  <p className="text-gray-600 group-hover:text-white">12 products</p>
+                  <div className="relative w-16 h-16 mx-auto mb-4 overflow-hidden rounded-xl">
+                    <Image 
+                      src={category.image} 
+                      alt={`${category.name} category`}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                  </div>
+                  <h3 className="text-xl font-semibold">{category.name}</h3>
+                  <p className="text-gray-600 group-hover:text-white">{category.productCount}</p>
                 </div>
               ))}
             </div>
@@ -136,7 +165,14 @@ export default function Home() {
                 </div>
                 <p className="text-gray-700 mb-6">&ldquo;The quality of the sofa exceeded my expectations. It&apos;s comfortable, stylish, and has transformed my living room.&rdquo;</p>
                 <div className="flex items-center">
-                  <div className="bg-gray-200 border-2 border-dashed rounded-xl w-12 h-12 mr-4" />
+                  <div className="relative w-12 h-12 mr-4 overflow-hidden rounded-xl">
+                    <Image 
+                      src="/images/testmony.png" 
+                      alt="Customer testimonial" 
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
                   <div>
                     <h4 className="font-bold">Sarah Johnson</h4>
                     <p className="text-gray-600">Interior Designer</p>
