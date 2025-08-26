@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import Image from 'next/image';
+import Link from 'next/link';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -359,12 +359,12 @@ export default function ContactPage() {
             Visit our showroom or browse our online collection to find the perfect furniture for your home.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/products" className="bg-white text-primary hover:bg-gray-100 px-8 py-3 rounded-lg font-medium transition duration-200">
+            <Link href="/products" className="bg-white text-primary hover:bg-gray-100 px-8 py-3 rounded-lg font-medium transition duration-200">
               Shop Our Collection
-            </a>
-            <a href="/" className="border border-white text-white hover:bg-white hover:text-primary px-8 py-3 rounded-lg font-medium transition duration-200">
+            </Link>
+            <Link href="/" className="border border-white text-white hover:bg-white hover:text-primary px-8 py-3 rounded-lg font-medium transition duration-200">
               Back to Home
-            </a>
+            </Link>
           </div>
         </div>
       </section>
