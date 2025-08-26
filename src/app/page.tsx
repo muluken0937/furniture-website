@@ -1,5 +1,4 @@
 // src/app/page.js
-import Header from '@/components/Header';
 import ProductGrid from '@/components/ProductGrid';
 import Footer from '@/components/Footer';
 import Image from 'next/image';
@@ -71,8 +70,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
-      
       {/* Enhanced Hero Section */}
       <section className="relative">
         {/* Background image */}
