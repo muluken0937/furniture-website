@@ -3,6 +3,7 @@ import Header from '@/components/Header';
 import ProductGrid from '@/components/ProductGrid';
 import Footer from '@/components/Footer';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Home() {
   const categories = [
@@ -109,7 +110,11 @@ export default function Home() {
             <h2 className="text-3xl font-bold text-center mb-12">Shop by Category</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {categories.map((category, index) => (
-                <div key={index} className="bg-gray-50 rounded-xl p-6 text-center hover:bg-primary hover:text-white transition duration-300 cursor-pointer group">
+                <Link 
+                  key={index} 
+                  href={`/products?category=${category.name.toLowerCase()}`}
+                  className="bg-gray-50 rounded-xl p-6 text-center hover:bg-primary hover:text-white transition duration-300 cursor-pointer group"
+                >
                   <div className="relative w-16 h-16 mx-auto mb-4 overflow-hidden rounded-xl">
                     <Image 
                       src={category.image} 
@@ -120,7 +125,7 @@ export default function Home() {
                   </div>
                   <h3 className="text-xl font-semibold">{category.name}</h3>
                   <p className="text-gray-600 group-hover:text-white">{category.productCount}</p>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -146,7 +151,12 @@ export default function Home() {
       
       {/* Product showcase */}
       <main className="flex-grow container mx-auto px-4 py-16">
-        <ProductGrid />
+        <ProductGrid selectedCategory="" selectedType="" isHomePage={true} />
+        <div className="text-center mt-12">
+          <Link href="/products" className="border-2 border-primary text-primary px-8 py-3 rounded-full font-medium hover:bg-primary hover:text-white transition">
+            View All Products
+          </Link>
+        </div>
       </main>
       
       {/* Testimonial section */}

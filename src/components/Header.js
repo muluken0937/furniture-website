@@ -52,14 +52,16 @@ export default function Header() {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-4">
             {/* Logo */}
-            <Link href="/" className="text-2xl font-bold text-primary flex items-center">
-              <Image 
-                src="/images/logo.png" 
-                alt="Karis Furniture Logo" 
-                width={40} 
-                height={40} 
-                className="mr-2"
-              />
+            <Link href="/" className="text-2xl font-bold text-primary flex items-center h-12">
+              <div className="relative h-full w-32 mr-2">
+                <Image 
+                  src="/images/logo.png" 
+                  alt="Karis Furniture Logo" 
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
               Karis Furniture
             </Link>
             
