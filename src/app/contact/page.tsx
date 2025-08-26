@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Footer from '@/components/Footer';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -43,18 +44,15 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-primary to-primary-dark text-white">
-        <div className="container mx-auto px-4 py-16">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">Contact Us</h1>
-            <p className="text-xl md:text-2xl text-gray-100 max-w-3xl mx-auto">
-              Get in touch with our team. We&apos;re here to help you find the perfect furniture for your space.
-            </p>
+    <div className="min-h-screen flex flex-col">
+      <main className="flex-grow">
+        {/* Page Header */}
+        <div className="bg-gray-50 py-4">
+          <div className="container mx-auto px-4 text-center">
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">Contact Us</h1>
+            <p className="text-gray-600">Get in touch with Habitsh Furniture</p>
           </div>
         </div>
-      </div>
 
       {/* Contact Information & Form */}
       <section className="py-16 bg-white">
@@ -75,9 +73,9 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-2">Visit Our Showroom</h3>
-                    <p className="text-gray-600 mb-2">150 Park Row</p>
-                    <p className="text-gray-600 mb-2">New York, NY 10007</p>
-                    <p className="text-gray-600">United States</p>
+                    <p className="text-gray-600 mb-2">Habitsh furniture</p>
+                    <p className="text-gray-600 mb-2">2P5J+H79, Addis Ababa</p>
+                    <p className="text-gray-600">Ethiopia</p>
                   </div>
                 </div>
 
@@ -275,12 +273,12 @@ export default function ContactPage() {
       <section className="py-16 bg-gray-100">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Find Our Showroom</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Find Habitsh Furniture Showroom</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
               Visit our showroom to see our furniture in person and get expert advice from our design team.
             </p>
             <a
-              href="https://maps.app.goo.gl/dqEdsSBZBiQnXEF38"
+              href="https://www.google.com/maps/place/Habitsh+furniture/@9.0077446,38.7283005,405m/data=!3m1!1e3!4m6!3m5!1s0x164b870029bba6af:0x77150d0609077d61!8m2!3d9.008918!4d38.730722!16s%2Fg%2F11y8g5mmmv?entry=ttu&g_ep=EgoyMDI1MDgxOS4wIKXMDSoASAFQAw%3D%3D"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg font-medium transition duration-200"
@@ -295,14 +293,14 @@ export default function ContactPage() {
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
             <div className="h-96 bg-gray-200">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3024.2219901290355!2d-74.00369368400567!3d40.71312937933185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a23e28c1191%3A0x49f75d3281df052a!2s150%20Park%20Row%2C%20New%20York%2C%20NY%2010007%2C%20USA!5e0!3m2!1sen!2sus!4v1640995200000!5m2!1sen!2sus"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.1234567890123!2d38.730722!3d9.008918!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b870029bba6af%3A0x77150d0609077d61!2sHabitsh%20furniture!5e0!3m2!1sen!2sus!4v1640995200000!5m2!1sen!2sus"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Karis Furniture Showroom Location"
+                title="Habitsh Furniture Showroom Location"
               />
             </div>
           </div>
@@ -368,6 +366,8 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
+      </main>
+      <Footer />
     </div>
   );
 } 

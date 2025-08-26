@@ -1,20 +1,18 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import Footer from '@/components/Footer';
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-primary to-primary-dark text-white">
-        <div className="container mx-auto px-4 py-16">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">About Karis Furniture</h1>
-            <p className="text-xl md:text-2xl text-gray-100 max-w-3xl mx-auto">
-              Crafting beautiful spaces with premium furniture since 2010
-            </p>
+    <div className="min-h-screen flex flex-col">
+      <main className="flex-grow">
+        {/* Page Header */}
+        <div className="bg-gray-50 py-4">
+          <div className="container mx-auto px-4 text-center">
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">About Us</h1>
+            <p className="text-gray-600">Learn more about Habitsh Furniture and our story</p>
           </div>
         </div>
-      </div>
 
       {/* Our Story Section */}
       <section className="py-16 bg-white">
@@ -23,12 +21,12 @@ export default function AboutPage() {
             <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
               <p className="text-lg text-gray-600 mb-6">
-                Founded in 2010, Karis Furniture began as a small family workshop with a simple mission: 
+                Founded in 2010, Habitsh Furniture began as a small family workshop with a simple mission: 
                 to create furniture that combines timeless design with exceptional craftsmanship. What started 
                 as a passion project has grown into one of the region's most trusted names in premium furniture.
               </p>
               <p className="text-lg text-gray-600 mb-6">
-                Our journey began when our founder, Sarah Karis, inherited her grandfather's woodworking tools 
+                Our journey began when our founder, Sarah Habitsh, inherited her grandfather's woodworking tools 
                 and decided to honor his legacy by creating furniture that would last generations. Today, we 
                 continue that tradition with a team of skilled artisans who share the same dedication to quality 
                 and attention to detail.
@@ -42,7 +40,7 @@ export default function AboutPage() {
             <div className="relative h-96 rounded-lg overflow-hidden shadow-xl">
               <Image 
                 src="/images/hero.png" 
-                alt="Karis Furniture Workshop" 
+                alt="Habitsh Furniture Workshop" 
                 fill
                 className="object-cover"
               />
@@ -292,6 +290,8 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+      </main>
+      <Footer />
     </div>
   );
 } 
