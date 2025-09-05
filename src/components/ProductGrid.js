@@ -124,41 +124,41 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
 
   const ProductCard = ({ product, isHomePage = false }) => (
     <div className={`bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition group ${isHomePage ? 'flex-shrink-0 w-80' : 'w-full'}`}>
-      <div className="relative h-64">
-        <Image 
-          src={product.image} 
-          alt={product.name} 
-          fill
-          className="object-cover group-hover:scale-105 transition duration-300"
-        />
-        <button className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:bg-primary hover:text-white transition">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-          </svg>
-        </button>
+            <div className="relative h-64">
+              <Image 
+                src={product.image} 
+                alt={product.name} 
+                fill
+                className="object-cover group-hover:scale-105 transition duration-300"
+              />
+              <button className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:bg-primary hover:text-white transition">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </button>
         <div className="absolute top-4 left-4">
           <span className="bg-primary text-white px-2 py-1 rounded-full text-xs font-medium">
             {product.category.charAt(0).toUpperCase() + product.category.slice(1)}
           </span>
         </div>
-      </div>
-      <div className="p-6">
+            </div>
+            <div className="p-6">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm text-gray-500 capitalize">{product.type}</span>
           <div className="flex items-center">
             <span className="text-yellow-400 mr-1">&star;</span>
             <span className="text-sm text-gray-600">{product.rating}</span>
-          </div>
-        </div>
+                </div>
+              </div>
         <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
         <div className="flex items-center justify-between">
           <span className="text-2xl font-bold text-primary">${product.price}</span>
           <button className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg transition duration-200">
-            Add to Cart
-          </button>
-        </div>
-      </div>
-    </div>
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
   );
 
   return (
@@ -199,8 +199,8 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
                 <ProductCard key={`duplicate-${product.id}`} product={product} isHomePage={true} />
               ))}
             </div>
-          </div>
-
+      </div>
+      
           {/* Second Row - Right to Left */}
           <div className="flex gap-6 pb-4 scrollbar-hide overflow-hidden">
             <div className="flex gap-6 animate-scroll-right">
@@ -221,7 +221,7 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
-        </div>
+      </div>
       )}
     </section>
   );
