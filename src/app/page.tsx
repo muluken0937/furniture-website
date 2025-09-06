@@ -92,7 +92,7 @@ export default function Home() {
             Discover handcrafted pieces that blend comfort, style, and sustainability for your modern home.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <button className="bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-full text-lg font-medium transition duration-300 transform hover:scale-105">
+            <button className="bg-primary hover:bg-teal-800 text-white px-8 py-4 rounded-full text-lg font-medium transition duration-300 transform hover:scale-105">
               Shop Collection
             </button>
             <button className="bg-white hover:bg-gray-100 text-gray-900 px-8 py-4 rounded-full text-lg font-medium transition duration-300">

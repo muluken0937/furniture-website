@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import Footer from '@/components/Footer';
 
 export default function AboutPage() {
@@ -263,7 +262,7 @@ export default function AboutPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
                   <textarea rows={4} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
                 </div>
-                <button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white py-3 px-6 rounded-lg font-medium transition duration-200">
+                <button type="submit" className="w-full bg-primary hover:bg-teal-800 text-white py-3 px-6 rounded-lg font-medium transition duration-200">
                   Send Message
                 </button>
               </form>
@@ -272,24 +271,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-gray-900 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Space?</h2>
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Explore our collection of premium furniture and discover pieces that will bring comfort, 
-            style, and functionality to your home.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/products" className="bg-primary hover:bg-primary-dark text-white px-8 py-3 rounded-lg font-medium transition duration-200">
-              Shop Our Collection
-            </Link>
-            <Link href="/" className="border border-white text-white hover:bg-white hover:text-gray-900 px-8 py-3 rounded-lg font-medium transition duration-200">
-              Back to Home
-            </Link>
-          </div>
-        </div>
-      </section>
       </main>
       <Footer />
     </div>
