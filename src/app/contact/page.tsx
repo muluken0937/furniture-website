@@ -249,7 +249,7 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-primary hover:bg-primary-dark disabled:bg-gray-400 text-white py-3 px-6 rounded-lg font-medium transition duration-200 flex items-center justify-center"
+                  className="w-full bg-teal-600 hover:bg-teal-700 disabled:bg-gray-400 text-white py-3 px-6 rounded-lg font-medium transition duration-200 flex items-center justify-center shadow-lg border-2 border-teal-600 opacity-100 send-message-btn"
                 >
                   {isSubmitting ? (
                     <>
@@ -281,7 +281,7 @@ export default function ContactPage() {
               href="https://www.google.com/maps/place/Habitsh+furniture/@9.0077446,38.7283005,405m/data=!3m1!1e3!4m6!3m5!1s0x164b870029bba6af:0x77150d0609077d61!8m2!3d9.008918!4d38.730722!16s%2Fg%2F11y8g5mmmv?entry=ttu&g_ep=EgoyMDI1MDgxOS4wIKXMDSoASAFQAw%3D%3D"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg font-medium transition duration-200"
+              className="inline-flex items-center bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-lg font-medium transition duration-200"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m-6 3l6-3" />
