@@ -6,9 +6,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#3a86ff',
-        secondary: '#ffbe0b',
-        accent: '#fb5607',
+        primary: '#0f766e', // Dark teal/blue-green from logo
+        secondary: '#a16207', // Brown from logo
+        accent: '#94a3b8', // Light gray from logo
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

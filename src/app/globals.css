@@ -54,3 +54,24 @@
     animation: scroll-right 30s linear infinite;
   }
 }
+/* Ensure Send Message button is always visible */
+.send-message-btn {
+}
+
+.send-message-btn:hover {
+}
+
+
+/* Ensure Send Message button is always visible */
+.send-message-btn {
+  background-color: #0d9488 !important;
+  border: 2px solid #0d9488 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: flex !important;
+}
+
+.send-message-btn:hover {
+  background-color: #0f766e !important;
+  border-color: #0f766e !important;
+}
