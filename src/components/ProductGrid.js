@@ -153,7 +153,7 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
         <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
         <div className="flex items-center justify-between">
           <span className="text-2xl font-bold text-primary">${product.price}</span>
-          <button className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg transition duration-200">
+          <button className="bg-primary hover:bg-teal-800 text-white px-4 py-2 rounded-lg transition duration-200">
                   Add to Cart
                 </button>
               </div>
