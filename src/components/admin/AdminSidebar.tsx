@@ -12,6 +12,7 @@ import {
   UsersIcon,
   ChartBarIcon,
   CogIcon,
+  UserIcon,
 } from '@heroicons/react/24/outline';
 
 const AdminSidebar: React.FC = () => {
@@ -34,11 +35,46 @@ const AdminSidebar: React.FC = () => {
   });
 
   return (
-    <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg">
+    <div 
+      className="w-64 bg-white shadow-lg overflow-y-auto" 
+      style={{ 
+        borderRight: '1px solid #94a3b8',
+        borderTop: '2px solid #0f766e', // Add top border to differentiate from header
+        height: 'calc(100vh - 112px)', // Full height minus header height
+        position: 'relative',
+        zIndex: 59 // High z-index to ensure visibility
+      }}
+    >
       <div className="flex flex-col h-full">
-        {/* Logo */}
-        <div className="flex items-center justify-center h-16 px-4 bg-blue-600">
-          <h1 className="text-xl font-bold text-white">Admin Panel</h1>
+        {/* Profile Section - At top of sidebar */}
+        <div 
+          className="p-4" 
+          style={{ 
+            borderBottom: '1px solid #94a3b8',
+            backgroundColor: '#f8fafc'
+          }}
+        >
+          <div className="flex items-center space-x-3">
+            {/* Profile Avatar */}
+            <div className="flex-shrink-0">
+              <div 
+                className="w-12 h-12 rounded-full flex items-center justify-center" 
+                style={{ backgroundColor: '#0f766e' }}
+              >
+                <UserIcon className="w-6 h-6 text-white" />
+              </div>
+            </div>
+            
+            {/* Profile Info */}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium truncate" style={{ color: '#0f766e' }}>
+                {isAdmin ? 'Administrator' : 'Staff Member'}
+              </p>
+              <p className="text-xs truncate" style={{ color: '#94a3b8' }}>
+                admin@furnicraft.com
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Navigation */}
@@ -51,9 +87,20 @@ const AdminSidebar: React.FC = () => {
                 href={item.href}
                 className={`flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                   isActive
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                    ? 'text-white'
+                    : 'text-gray-600 hover:text-white'
                 }`}
+                style={isActive ? { backgroundColor: '#0f766e' } : {}}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor = '#a16207'; // Secondary color for hover
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
+                }}
               >
                 <item.icon className="w-5 h-5 mr-3" />
                 {item.name}
@@ -62,18 +109,26 @@ const AdminSidebar: React.FC = () => {
           })}
         </nav>
 
-        {/* User Info */}
-        <div className="p-4 border-t border-gray-200">
+        {/* User Info - Fixed at bottom */}
+        <div 
+          className="p-4" 
+          style={{ 
+            borderTop: '1px solid #94a3b8',
+            position: 'sticky',
+            bottom: 0,
+            backgroundColor: 'white'
+          }}
+        >
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#d97706' }}>
                 <span className="text-sm font-medium text-white">
                   {isAdmin ? 'A' : 'S'}
                 </span>
               </div>
             </div>
             <div className="ml-3">
-              <p className="text-sm font-medium text-gray-700">
+              <p className="text-sm font-medium" style={{ color: '#0f766e' }}>
                 {isAdmin ? 'Administrator' : 'Staff Member'}
               </p>
             </div>

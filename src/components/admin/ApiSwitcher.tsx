@@ -16,7 +16,7 @@ const ApiSwitcher: React.FC = () => {
   }, [currentApi]);
 
   const handleApiChange = (apiKey: string) => {
-    const selectedApi = apis[apiKey];
+    const selectedApi = apis[apiKey as keyof typeof apis];
     if (selectedApi) {
       setCurrentApi(selectedApi.url);
       setApiName(selectedApi.name);
@@ -27,65 +27,54 @@ const ApiSwitcher: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-4 mb-6">
+    <div className="bg-white rounded-lg shadow-md p-4 mb-6">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-medium text-gray-900">API Configuration</h3>
-          <p className="text-sm text-gray-500">
-            Current: {apiName}
-          </p>
-          <p className="text-xs text-gray-400 font-mono">
-            {currentApi}
-          </p>
-        </div>
-        
-        <div className="flex items-center space-x-2">
-          {/* Health Status */}
-          <div className="flex items-center">
-            {isHealthy === null ? (
-              <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-            ) : isHealthy ? (
-              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-            ) : (
-              <div className="w-2 h-2 bg-red-400 rounded-full"></div>
-            )}
-            <span className="ml-1 text-xs text-gray-500">
-              {isHealthy === null ? 'Checking...' : isHealthy ? 'Online' : 'Offline'}
-            </span>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">API Configuration</h3>
+          <div className="flex items-center space-x-4">
+            <div>
+              <p className="text-sm text-gray-600">Current: {apiName}</p>
+              <p className="text-xs text-gray-500 font-mono">{currentApi}</p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className={`w-2 h-2 rounded-full ${isHealthy ? 'bg-green-500' : isHealthy === false ? 'bg-red-500' : 'bg-yellow-500'}`}></div>
+              <span className="text-xs text-gray-600">
+                {isHealthy === null ? 'Checking...' : isHealthy ? 'Online' : 'Offline'}
+              </span>
+            </div>
           </div>
-          
-          <button
-            onClick={() => setShowDetails(!showDetails)}
-            className="text-sm text-blue-600 hover:text-blue-800"
-          >
-            {showDetails ? 'Hide' : 'Show'} Details
-          </button>
         </div>
+        <button
+          onClick={() => setShowDetails(!showDetails)}
+          className="text-sm text-blue-600 hover:text-blue-800 underline"
+        >
+          {showDetails ? 'Hide Details' : 'Show Details'}
+        </button>
       </div>
 
       {showDetails && (
         <div className="mt-4 pt-4 border-t border-gray-200">
-          <h4 className="text-sm font-medium text-gray-700 mb-2">Available APIs:</h4>
+          <h4 className="text-sm font-medium text-gray-900 mb-3">Switch API Environment</h4>
           <div className="space-y-2">
             {Object.entries(apis).map(([key, api]) => (
-              <div
-                key={key}
-                className={`p-2 rounded border cursor-pointer transition-colors ${
-                  currentApi === api.url
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-                onClick={() => handleApiChange(key)}
-              >
-                <div className="text-sm font-medium text-gray-900">{api.name}</div>
-                <div className="text-xs text-gray-500 font-mono">{api.url}</div>
-              </div>
+              <label key={key} className="flex items-center space-x-3">
+                <input
+                  type="radio"
+                  name="api"
+                  value={key}
+                  checked={currentApi === api.url}
+                  onChange={() => handleApiChange(key)}
+                  className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                />
+                <div className="flex-1">
+                  <div className="text-sm font-medium text-gray-900">{api.name}</div>
+                  <div className="text-xs text-gray-500 font-mono">{api.url}</div>
+                </div>
+              </label>
             ))}
           </div>
-          
           <div className="mt-3 text-xs text-gray-500">
-            <p>Note: API switching requires app restart in production.</p>
-            <p>Current environment: {process.env.NODE_ENV}</p>
+            <p>Note: API switching requires a page refresh to take effect.</p>
           </div>
         </div>
       )}

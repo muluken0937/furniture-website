@@ -3,7 +3,6 @@
 import React, { ReactNode } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import AdminSidebar from './AdminSidebar';
-import Header from '../Header';
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -14,21 +13,21 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#f8fafc' }}>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2" style={{ borderColor: '#0f766e' }}></div>
       </div>
     );
   }
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#f8fafc' }}>
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
-            <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+            <h2 className="mt-6 text-3xl font-extrabold" style={{ color: '#0f766e' }}>
               Access Denied
             </h2>
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm" style={{ color: '#94a3b8' }}>
               Please log in to access the admin panel.
             </p>
           </div>
@@ -39,13 +38,13 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   if (!isStaff) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#f8fafc' }}>
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
-            <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+            <h2 className="mt-6 text-3xl font-extrabold" style={{ color: '#0f766e' }}>
               Access Denied
             </h2>
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm" style={{ color: '#94a3b8' }}>
               You don't have permission to access the admin panel.
             </p>
           </div>
@@ -55,23 +54,47 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Main Header and Navigation */}
-      <Header />
+    <div className="min-h-screen" style={{ backgroundColor: '#f8fafc' }}>
+      {/* Fixed Sidebar - Starts from bottom of header */}
+      <div 
+        className="fixed left-0" 
+        style={{ 
+          top: '112px', // Start from bottom of header
+          zIndex: 59 // High z-index to ensure visibility
+        }}
+      >
+        <AdminSidebar />
+      </div>
       
-      {/* Admin Panel Section */}
-      <div className="bg-blue-600 text-white py-3">
+      {/* Fixed Admin Panel Banner - From right edge of sidebar to right edge of screen */}
+      <div 
+        className="fixed text-white py-3" 
+        style={{ 
+          backgroundColor: '#0f766e',
+          top: '112px', // Position below the main header
+          left: '256px', // Start from right edge of sidebar
+          right: '0px', // Extend to right edge of screen
+          zIndex: 60 // Higher than header's z-50
+        }}
+      >
         <div className="container mx-auto px-4">
           <h2 className="text-lg font-semibold">Admin Panel</h2>
         </div>
       </div>
       
-      <div className="flex">
-        <AdminSidebar />
-        <main className="flex-1 p-6">
-          {children}
-        </main>
-      </div>
+      {/* Main Content with proper margins */}
+      <main 
+        className="p-6" 
+        style={{ 
+          marginLeft: '256px', // Width of sidebar
+          marginTop: '160px', // Height of header (112px) + admin panel banner (48px)
+          minHeight: 'calc(100vh - 160px)',
+          position: 'relative',
+          zIndex: 1 // Lower z-index than fixed elements
+        }}
+      >
+        {children}
+      </main>
     </div>
   );
 };
