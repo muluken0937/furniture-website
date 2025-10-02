@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import AdminLayout from '../../../components/admin/AdminLayout';
-import ProtectedRoute from '../../../components/admin/ProtectedRoute';
+import { getApiUrl } from '@/config/api';
+import AdminLayout from '@/components/admin/AdminLayout';
+import ProtectedRoute from '@/components/admin/ProtectedRoute';
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 interface Product {
@@ -22,7 +23,7 @@ const ProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  const apiUrl = getApiUrl();
 
   useEffect(() => {
     fetchProducts();
@@ -30,7 +31,7 @@ const ProductsPage: React.FC = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/products/`);
+      const response = await fetch(`${apiUrl}/api/products/`);
       const data = await response.json();
       setProducts(data.results || data);
     } catch (error) {

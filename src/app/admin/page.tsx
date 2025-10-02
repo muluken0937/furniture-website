@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import AdminLayout from '../../components/admin/AdminLayout';
-import ProtectedRoute from '../../components/admin/ProtectedRoute';
-import ApiSwitcher from '../../components/admin/ApiSwitcher';
-import { getApiUrl } from '../../../config/api';
+import AdminLayout from '@/components/admin/AdminLayout';
+import ProtectedRoute from '@/components/admin/ProtectedRoute';
+import ApiSwitcher from '@/components/admin/ApiSwitcher';
+import { getApiUrl } from '@/config/api';
 import {
   CubeIcon,
   TagIcon,

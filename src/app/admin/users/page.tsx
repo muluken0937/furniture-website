@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import AdminLayout from '../../../components/admin/AdminLayout';
-import ProtectedRoute from '../../../components/admin/ProtectedRoute';
+import { getApiUrl } from '@/config/api';
+import AdminLayout from '@/components/admin/AdminLayout';
+import ProtectedRoute from '@/components/admin/ProtectedRoute';
 import { UserIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 interface User {
@@ -18,7 +19,7 @@ const UsersPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  const apiUrl = getApiUrl();
 
   useEffect(() => {
     fetchUsers();

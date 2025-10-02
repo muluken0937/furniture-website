@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Bars3Icon, BellIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 
 const AdminHeader: React.FC = () => {

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { getApiUrl, getApiName, checkApiHealth } from '../../../config/api';
+import { getApiUrl, getApiName, checkApiHealth } from '@/config/api';
 
 const ApiSwitcher: React.FC = () => {
   const [currentApi, setCurrentApi] = useState(getApiUrl());

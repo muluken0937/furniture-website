@@ -1,7 +1,7 @@
 'use client';
 
 import React, { ReactNode } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 import AdminSidebar from './AdminSidebar';
 import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 
