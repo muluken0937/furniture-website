@@ -1,7 +1,7 @@
 // src/components/ProductGrid.js
 import Image from 'next/image';
 
-export default function ProductGrid({ selectedCategory = 'all', selectedType = 'all', priceRange = [0, 5000], isHomePage = false }) {
+export default function ProductGrid({ selectedCategory = 'all', selectedType = 'all', priceRange = [0, 5000], sortBy = 'featured', searchQuery = '', isHomePage = false }) {
   const products = [
     { 
       id: 1, 
@@ -10,7 +10,8 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
       category: 'sofa', 
       type: 'house',
       image: '/images/gray-sofa.jpeg',
-      rating: 4.8
+      rating: 4.8,
+      dateAdded: '2024-01-15'
     },
     { 
       id: 2, 
@@ -19,7 +20,8 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
       category: 'table', 
       type: 'house',
       image: '/images/dinning table.webp',
-      rating: 4.6
+      rating: 4.6,
+      dateAdded: '2024-01-10'
     },
     { 
       id: 3, 
@@ -28,7 +30,8 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
       category: 'chair', 
       type: 'office',
       image: '/images/linen-chair.jpeg',
-      rating: 4.9
+      rating: 4.9,
+      dateAdded: '2024-01-20'
     },
     { 
       id: 4, 
@@ -37,7 +40,8 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
       category: 'bed', 
       type: 'house',
       image: '/images/wooden-bed.jpg',
-      rating: 4.7
+      rating: 4.7,
+      dateAdded: '2024-01-05'
     },
     { 
       id: 5, 
@@ -46,7 +50,8 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
       category: 'table', 
       type: 'office',
       image: '/images/office table.jpeg',
-      rating: 4.5
+      rating: 4.5,
+      dateAdded: '2024-01-18'
     },
     { 
       id: 6, 
@@ -55,7 +60,8 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
       category: 'chair', 
       type: 'office',
       image: '/images/linen-chair.jpeg',
-      rating: 4.8
+      rating: 4.8,
+      dateAdded: '2024-01-12'
     },
     { 
       id: 7, 
@@ -64,7 +70,8 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
       category: 'sofa', 
       type: 'house',
       image: '/images/sofa.jpg',
-      rating: 4.9
+      rating: 4.9,
+      dateAdded: '2024-01-08'
     },
     { 
       id: 8, 
@@ -73,7 +80,8 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
       category: 'bed', 
       type: 'house',
       image: '/images/wooden-bed.jpg',
-      rating: 4.6
+      rating: 4.6,
+      dateAdded: '2024-01-22'
     },
     { 
       id: 9, 
@@ -82,7 +90,8 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
       category: 'table', 
       type: 'house',
       image: '/images/dinning table.webp',
-      rating: 4.4
+      rating: 4.4,
+      dateAdded: '2024-01-14'
     },
     { 
       id: 10, 
@@ -91,7 +100,8 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
       category: 'chair', 
       type: 'house',
       image: '/images/linen-chair.jpeg',
-      rating: 4.7
+      rating: 4.7,
+      dateAdded: '2024-01-16'
     },
     { 
       id: 11, 
@@ -100,7 +110,8 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
       category: 'table', 
       type: 'office',
       image: '/images/office table.jpeg',
-      rating: 4.8
+      rating: 4.8,
+      dateAdded: '2024-01-11'
     },
     { 
       id: 12, 
@@ -109,17 +120,42 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
       category: 'sofa', 
       type: 'house',
       image: '/images/gray-sofa.jpeg',
-      rating: 4.5
+      rating: 4.5,
+      dateAdded: '2024-01-19'
     }
   ];
 
-  // Filter products based on selected filters
+  // Filter products based on selected filters and search query
   const filteredProducts = products.filter(product => {
     const categoryMatch = selectedCategory === '' || selectedCategory === 'all' || product.category === selectedCategory;
     const typeMatch = selectedType === '' || selectedType === 'all' || product.type === selectedType;
     const priceMatch = product.price >= priceRange[0] && product.price <= priceRange[1];
     
-    return categoryMatch && typeMatch && priceMatch;
+    // Search functionality - search in product name, category, and type
+    const searchMatch = !searchQuery || 
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.type.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    return categoryMatch && typeMatch && priceMatch && searchMatch;
+  });
+
+  // Sort products based on sortBy parameter
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    switch (sortBy) {
+      case 'price-low':
+        return a.price - b.price;
+      case 'price-high':
+        return b.price - a.price;
+      case 'newest':
+        return new Date(b.dateAdded) - new Date(a.dateAdded);
+      case 'rating':
+        return b.rating - a.rating;
+      case 'featured':
+      default:
+        // Keep original order for featured
+        return 0;
+    }
   });
 
   const ProductCard = ({ product, isHomePage = false }) => (
@@ -163,7 +199,7 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
 
   return (
     <section>
-      {(selectedCategory === '' || selectedCategory === 'all') && (selectedType === '' || selectedType === 'all') && (
+      {(selectedCategory === '' || selectedCategory === 'all') && (selectedType === '' || selectedType === 'all') && !searchQuery && (
         <div className="flex flex-col md:flex-row justify-between items-center mb-12">
           <h2 className="text-3xl font-bold">Featured Collection</h2>
           <div className="flex space-x-2 mt-4 md:mt-0">
@@ -174,7 +210,7 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
         </div>
       )}
       
-      {filteredProducts.length === 0 ? (
+      {sortedProducts.length === 0 ? (
         <div className="text-center py-12">
           <div className="text-gray-400 mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -182,20 +218,25 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
             </svg>
           </div>
           <h3 className="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
-          <p className="text-gray-600">Try adjusting your filters to find what you&apos;re looking for.</p>
+          <p className="text-gray-600">
+            {searchQuery 
+              ? `No products found matching "${searchQuery}". Try adjusting your search or filters.`
+              : "Try adjusting your filters to find what you're looking for."
+            }
+          </p>
         </div>
       ) : isHomePage ? (
         <div className="space-y-8">
           {/* First Row - Left to Right */}
           <div className="flex gap-6 pb-4 scrollbar-hide overflow-hidden">
             <div className="flex gap-6 animate-scroll-left">
-              {filteredProducts.slice(0, Math.ceil(filteredProducts.length / 2)).map((product) => (
+              {sortedProducts.slice(0, Math.ceil(sortedProducts.length / 2)).map((product) => (
                 <ProductCard key={product.id} product={product} isHomePage={true} />
               ))}
             </div>
             {/* Duplicate for seamless loop */}
             <div className="flex gap-6 animate-scroll-left">
-              {filteredProducts.slice(0, Math.ceil(filteredProducts.length / 2)).map((product) => (
+              {sortedProducts.slice(0, Math.ceil(sortedProducts.length / 2)).map((product) => (
                 <ProductCard key={`duplicate-${product.id}`} product={product} isHomePage={true} />
               ))}
             </div>
@@ -204,13 +245,13 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
           {/* Second Row - Right to Left */}
           <div className="flex gap-6 pb-4 scrollbar-hide overflow-hidden">
             <div className="flex gap-6 animate-scroll-right">
-              {filteredProducts.slice(Math.ceil(filteredProducts.length / 2)).map((product) => (
+              {sortedProducts.slice(Math.ceil(sortedProducts.length / 2)).map((product) => (
                 <ProductCard key={product.id} product={product} isHomePage={true} />
               ))}
             </div>
             {/* Duplicate for seamless loop */}
             <div className="flex gap-6 animate-scroll-right">
-              {filteredProducts.slice(Math.ceil(filteredProducts.length / 2)).map((product) => (
+              {sortedProducts.slice(Math.ceil(sortedProducts.length / 2)).map((product) => (
                 <ProductCard key={`duplicate-${product.id}`} product={product} isHomePage={true} />
               ))}
             </div>
@@ -218,7 +259,7 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4">
-          {filteredProducts.map((product) => (
+          {sortedProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
       </div>
