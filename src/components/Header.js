@@ -4,9 +4,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
   
   return (
     <header className="sticky top-0 z-50">
@@ -94,16 +96,20 @@ export default function Header() {
                 { name: 'Products', href: '/products' },
                 { name: 'About Us', href: '/about' },
                 { name: 'Contact Us', href: '/contact' }
-              ].map((item) => (
-                <Link 
-                  key={item.name} 
-                  href={item.href}
-                  className="font-medium text-gray-700 hover:text-primary transition relative group"
-                >
-                  {item.name}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
-                </Link>
-              ))}
+              ].map((item) => {
+                // treat root specially, otherwise allow prefix matches for sections
+                const isActive = item.href === '/' ? pathname === '/' : pathname?.startsWith(item.href);
+                return (
+                  <Link 
+                    key={item.name} 
+                    href={item.href}
+                    className="font-medium text-gray-700 hover:text-primary transition relative group"
+                  >
+                    {item.name}
+                    <span className={`absolute -bottom-1 left-0 h-0.5 transition-all ${isActive ? 'w-full bg-secondary' : 'w-0 bg-primary group-hover:w-full'}`}></span>
+                  </Link>
+                );
+              })}
             </div>
             
             {/* Right Icons */}
