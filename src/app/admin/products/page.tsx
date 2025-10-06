@@ -75,9 +75,9 @@ const ProductsPage: React.FC = () => {
     return (
       <ProtectedRoute requiredRole="staff">
         <AdminLayout>
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-secondary"></div>
-          </div>
+              <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: 'var(--color-secondary)' }}></div>
+            </div>
         </AdminLayout>
       </ProtectedRoute>
     );
@@ -93,10 +93,9 @@ const ProductsPage: React.FC = () => {
               <h1 className="text-3xl font-bold text-gray-900">Products</h1>
               <p className="mt-2 text-gray-600">Manage your furniture products</p>
             </div>
-            <button 
+              <button 
               onClick={() => router.push('/admin/products/add')}
-              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white transition-all duration-200 shadow-lg hover:shadow-xl"
-              style={{ backgroundColor: '#a16207' }}
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white transition-all duration-200 shadow-lg hover:shadow-xl bg-secondary-var"
             >
               <PlusIcon className="w-5 h-5 mr-2" />
               Add Product

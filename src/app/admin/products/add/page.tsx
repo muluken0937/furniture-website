@@ -216,22 +216,22 @@ const AddProductPage: React.FC = () => {
           </div>
 
           {/* Progress Bar */}
-          <div className="mb-4">
+            <div className="mb-4">
             <div className="flex items-center justify-center space-x-4">
-              <div className={`flex items-center ${currentStep >= 1 ? 'text-secondary' : 'text-accent'}`}>
+              <div className={`flex items-center ${currentStep >= 1 ? 'text-secondary-var' : 'text-accent'}`}>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                  currentStep >= 1 ? 'bg-secondary text-white' : 'bg-accent/20 text-accent'
+                  currentStep >= 1 ? 'bg-secondary-var text-white' : 'bg-accent/20 text-accent'
                 }`}>
                   1
                 </div>
                 <span className="ml-2 text-sm font-medium">Basic Info</span>
               </div>
               
-              <div className={`w-8 h-1 ${currentStep >= 2 ? 'bg-secondary' : 'bg-accent/20'}`}></div>
+              <div className={`w-8 h-1 ${currentStep >= 2 ? 'bg-secondary-var' : 'bg-accent/20'}`}></div>
               
-              <div className={`flex items-center ${currentStep >= 2 ? 'text-secondary' : 'text-accent'}`}>
+              <div className={`flex items-center ${currentStep >= 2 ? 'text-secondary-var' : 'text-accent'}`}>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                  currentStep >= 2 ? 'bg-secondary text-white' : 'bg-accent/20 text-accent'
+                  currentStep >= 2 ? 'bg-secondary-var text-white' : 'bg-accent/20 text-accent'
                 }`}>
                   2
                 </div>
@@ -426,7 +426,7 @@ const AddProductPage: React.FC = () => {
                       type="button"
                       onClick={nextStep}
                       className="inline-flex items-center px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-                      style={{ backgroundColor: '#a16207' }}
+                      style={{ backgroundColor: 'var(--color-secondary)' }}
                     >
                       Next
                       <ChevronRightIcon className="w-4 h-4 ml-2" />

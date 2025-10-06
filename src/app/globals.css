@@ -25,7 +25,44 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  /* Underline utilities using theme secondary color */
+  .underline-secondary {
+    text-decoration-line: underline;
+    text-decoration-color: #a16207;
+    text-underline-offset: 2px;
+  }
+  .decoration-secondary {
+    text-decoration-color: #a16207;
+  }
 }
+
+/* CSS variables for theme (fallbacks if tailwind config is commented) */
+:root {
+  --color-primary: #0a6860;
+  --color-secondary: #a16207;
+  --color-accent: #94a3b8;
+  --color-success: #79ecd9;
+  --color-warning: #d97706;
+  --font-sans: Inter, sans-serif;
+  --font-serif: Merriweather, serif;
+}
+
+/* Utility classes referencing CSS variables */
+.text-primary-var { color: var(--color-primary); }
+.text-secondary-var { color: var(--color-secondary); }
+.bg-primary-var { background-color: var(--color-primary); }
+.bg-secondary-var { background-color: var(--color-secondary); }
+.font-sans-var { font-family: var(--font-sans); }
+.font-serif-var { font-family: var(--font-serif); }
+/* More utilities for borders and semantic colors */
+.border-primary-var { border-color: var(--color-primary); }
+.border-secondary-var { border-color: var(--color-secondary); }
+.text-accent-var { color: var(--color-accent); }
+.bg-success-var { background-color: var(--color-success); }
+.text-success-var { color: var(--color-success); }
+.bg-warning-var { background-color: var(--color-warning); }
+.text-warning-var { color: var(--color-warning); }
 
 @keyframes scroll-left {
   0% {
@@ -56,22 +93,34 @@
 }
 /* Ensure Send Message button is always visible */
 .send-message-btn {
+  background-color: var(--color-primary) !important;
+  border: 2px solid var(--color-primary) !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
 }
 
 .send-message-btn:hover {
+  background-color: color-mix(in srgb, var(--color-primary) 80%, black 20%) !important;
+  border-color: color-mix(in srgb, var(--color-primary) 80%, black 20%) !important;
 }
 
 
 /* Ensure Send Message button is always visible */
 .send-message-btn {
-  background-color: #0d9488 !important;
-  border: 2px solid #0d9488 !important;
+  background-color: var(--color-primary) !important;
+  border: 2px solid var(--color-primary) !important;
   opacity: 1 !important;
   visibility: visible !important;
   display: flex !important;
 }
 
 .send-message-btn:hover {
-  background-color: #0f766e !important;
-  border-color: #0f766e !important;
+  background-color: color-mix(in srgb, var(--color-primary) 80%, black 20%) !important;
+  border-color: color-mix(in srgb, var(--color-primary) 80%, black 20%) !important;
 }

@@ -19,7 +19,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#f8fafc' }}>
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2" style={{ borderColor: '#0f766e' }}></div>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2" style={{ borderColor: 'var(--color-primary)' }}></div>
       </div>
     );
   }
@@ -29,10 +29,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#f8fafc' }}>
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
-            <h2 className="mt-6 text-3xl font-extrabold" style={{ color: '#0f766e' }}>
+            <h2 className="mt-6 text-3xl font-extrabold" style={{ color: 'var(--color-primary)' }}>
               Access Denied
             </h2>
-            <p className="mt-2 text-sm" style={{ color: '#94a3b8' }}>
+            <p className="mt-2 text-sm" style={{ color: 'var(--color-accent)' }}>
               Please log in to access the admin panel.
             </p>
           </div>
@@ -46,10 +46,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#f8fafc' }}>
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
-            <h2 className="mt-6 text-3xl font-extrabold" style={{ color: '#0f766e' }}>
+            <h2 className="mt-6 text-3xl font-extrabold" style={{ color: 'var(--color-primary)' }}>
               Access Denied
             </h2>
-            <p className="mt-2 text-sm" style={{ color: '#94a3b8' }}>
+            <p className="mt-2 text-sm" style={{ color: 'var(--color-accent)' }}>
               You don't have permission to access the admin panel.
             </p>
           </div>
@@ -75,7 +75,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       <div 
         className="fixed text-white py-3" 
         style={{ 
-          backgroundColor: '#0f766e',
+          backgroundColor: 'var(--color-primary)',
           top: '112px', // Position below the main header
           left: '256px', // Start from right edge of sidebar
           right: '0px', // Extend to right edge of screen

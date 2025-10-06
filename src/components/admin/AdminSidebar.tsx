@@ -37,9 +37,9 @@ const AdminSidebar: React.FC = () => {
   return (
     <div 
       className="w-64 bg-white shadow-lg overflow-y-auto" 
-      style={{ 
-        borderRight: '1px solid #94a3b8',
-        borderTop: '2px solid #0f766e', // Add top border to differentiate from header
+        style={{ 
+        borderRight: '1px solid var(--color-accent)',
+        borderTop: '2px solid var(--color-primary)', // Add top border to differentiate from header
         height: 'calc(100vh - 112px)', // Full height minus header height
         position: 'relative',
         zIndex: 59 // High z-index to ensure visibility
@@ -49,8 +49,8 @@ const AdminSidebar: React.FC = () => {
         {/* Profile Section - At top of sidebar */}
         <div 
           className="p-4" 
-          style={{ 
-            borderBottom: '1px solid #94a3b8',
+            style={{ 
+            borderBottom: '1px solid var(--color-accent)',
             backgroundColor: '#f8fafc'
           }}
         >
@@ -59,7 +59,7 @@ const AdminSidebar: React.FC = () => {
             <div className="flex-shrink-0">
               <div 
                 className="w-12 h-12 rounded-full flex items-center justify-center" 
-                style={{ backgroundColor: '#0f766e' }}
+                style={{ backgroundColor: 'var(--color-primary)' }}
               >
                 <UserIcon className="w-6 h-6 text-white" />
               </div>
@@ -67,10 +67,10 @@ const AdminSidebar: React.FC = () => {
             
             {/* Profile Info */}
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate" style={{ color: '#0f766e' }}>
+              <p className="text-sm font-medium truncate font-medium text-primary-var">
                 {isAdmin ? 'Administrator' : 'Staff Member'}
               </p>
-              <p className="text-xs truncate" style={{ color: '#94a3b8' }}>
+              <p className="text-xs truncate" style={{ color: 'var(--color-accent)' }}>
                 admin@furnicraft.com
               </p>
             </div>
@@ -85,15 +85,15 @@ const AdminSidebar: React.FC = () => {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`flex items-center px-4 py-2 text-sm rounded-lg transition-colors ${
                   isActive
-                    ? 'text-white'
-                    : 'text-gray-600 hover:text-white'
+                    ? 'text-primary-var font-bold'
+                    : 'text-gray-600 font-medium hover:text-white'
                 }`}
-                style={isActive ? { backgroundColor: '#0f766e' } : {}}
+                style={isActive ? { backgroundColor: 'var(--color-warning)' } : {}}
                 onMouseEnter={(e) => {
                   if (!isActive) {
-                    e.currentTarget.style.backgroundColor = '#a16207'; // Secondary color for hover
+                    e.currentTarget.style.backgroundColor = 'var(--color-secondary)'; // Secondary color for hover
                   }
                 }}
                 onMouseLeave={(e) => {

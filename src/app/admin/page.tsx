@@ -65,35 +65,35 @@ const AdminDashboard: React.FC = () => {
       name: 'Total Products',
       value: stats.totalProducts,
       icon: CubeIcon,
-      bgColor: '#0f766e', // Primary
+      bgColor: 'var(--color-primary)', // Primary
       textColor: '#ffffff',
     },
     {
       name: 'Categories',
       value: stats.totalCategories,
       icon: TagIcon,
-      bgColor: '#059669', // Success (Emerald)
+      bgColor: 'var(--color-success)', // Success (Emerald)
       textColor: '#ffffff',
     },
     {
       name: 'Total Orders',
       value: stats.totalOrders,
       icon: ShoppingCartIcon,
-      bgColor: '#d97706', // Warning (Amber)
+      bgColor: 'var(--color-warning)', // Warning (Amber)
       textColor: '#ffffff',
     },
     {
       name: 'Total Users',
       value: stats.totalUsers,
       icon: UsersIcon,
-      bgColor: '#a16207', // Secondary (Brown)
+      bgColor: 'var(--color-secondary)', // Secondary (Brown)
       textColor: '#ffffff',
     },
     {
       name: 'Revenue',
       value: `$${stats.totalRevenue.toLocaleString()}`,
       icon: CurrencyDollarIcon,
-      bgColor: '#94a3b8', // Accent (Light Gray)
+      bgColor: 'var(--color-accent)', // Accent (Light Gray)
       textColor: '#ffffff',
     },
   ];
@@ -101,10 +101,10 @@ const AdminDashboard: React.FC = () => {
   return (
     <ProtectedRoute requiredRole="staff">
       <AdminLayout>
-        <div className="space-y-6">
+            <div className="space-y-6">
           <div>
-            <h1 className="text-2xl font-bold" style={{ color: '#0f766e' }}>Dashboard</h1>
-            <p className="mt-1 text-sm" style={{ color: '#94a3b8' }}>
+            <h1 className="text-2xl font-bold" style={{ color: 'var(--color-primary)' }}>Dashboard</h1>
+            <p className="mt-1 text-sm" style={{ color: 'var(--color-accent)' }}>
               Overview of your furniture store
             </p>
           </div>
@@ -114,7 +114,7 @@ const AdminDashboard: React.FC = () => {
 
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {statCards.map((stat) => (
-              <div key={stat.name} className="bg-white overflow-hidden shadow rounded-lg" style={{ border: '1px solid #94a3b8' }}>
+              <div key={stat.name} className="bg-white overflow-hidden shadow rounded-lg" style={{ border: '1px solid var(--color-accent)' }}>
                 <div className="p-5">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
@@ -124,10 +124,10 @@ const AdminDashboard: React.FC = () => {
                     </div>
                     <div className="ml-5 w-0 flex-1">
                       <dl>
-                        <dt className="text-sm font-medium truncate" style={{ color: '#94a3b8' }}>
+                        <dt className="text-sm font-medium truncate" style={{ color: 'var(--color-accent)' }}>
                           {stat.name}
                         </dt>
-                        <dd className="text-lg font-medium" style={{ color: '#0f766e' }}>
+                        <dd className="text-lg font-medium" style={{ color: 'var(--color-primary)' }}>
                           {stat.value}
                         </dd>
                       </dl>
@@ -140,39 +140,39 @@ const AdminDashboard: React.FC = () => {
 
           <div className="bg-white shadow rounded-lg" style={{ border: '1px solid #94a3b8' }}>
             <div className="px-4 py-5 sm:p-6">
-              <h3 className="text-lg leading-6 font-medium" style={{ color: '#0f766e' }}>
+              <h3 className="text-lg leading-6 font-medium" style={{ color: 'var(--color-primary)' }}>
                 Quick Actions
               </h3>
               <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <button 
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors"
-                  style={{ backgroundColor: '#0f766e' }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0d5d56'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0f766e'}
+                  style={{ backgroundColor: 'var(--color-primary)' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-primary)'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-primary)'}
                 >
                   Add Product
                 </button>
                 <button 
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors"
-                  style={{ backgroundColor: '#059669' }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#047857'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#059669'}
+                  style={{ backgroundColor: 'var(--color-success)' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-success)'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-success)'}
                 >
                   Add Category
                 </button>
                 <button 
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors"
-                  style={{ backgroundColor: '#d97706' }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#b45309'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#d97706'}
+                  style={{ backgroundColor: 'var(--color-warning)' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-warning)'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-warning)'}
                 >
                   View Orders
                 </button>
                 <button 
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors"
-                  style={{ backgroundColor: '#a16207' }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#8a5206'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#a16207'}
+                  style={{ backgroundColor: 'var(--color-secondary)' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-secondary)'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-secondary)'}
                 >
                   View Analytics
                 </button>

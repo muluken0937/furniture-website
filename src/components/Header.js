@@ -151,13 +151,21 @@ export default function Header() {
                 { name: 'About Us', href: '/about' },
                 { name: 'Contact Us', href: '/contact' }
               ].map((item) => (
-                <Link 
-                  key={item.name} 
+                <Link
+                  key={item.name}
                   href={item.href}
-                  className="font-medium text-gray-700 hover:text-primary transition relative group"
+                  className={`transition relative group ${
+                    (pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href)))
+                      ? 'text-primary-var font-bold'
+                      : 'text-gray-700 font-medium'
+                  }`}
                 >
                   {item.name}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+                  <span className={`absolute -bottom-1 left-0 h-0.5 w-full origin-left bg-secondary-var transform ${
+                    (pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href)))
+                      ? 'scale-x-100'
+                      : 'scale-x-0 group-hover:scale-x-100'
+                  } transition-transform duration-200`} />
                 </Link>
               ))}
             </div>
@@ -214,7 +222,9 @@ export default function Header() {
                   <Link 
                     key={item.name} 
                     href={item.href}
-                    className="font-medium text-gray-700 hover:text-primary transition py-2 px-4 rounded-lg hover:bg-gray-50"
+                    className={`transition py-2 px-4 rounded-lg hover:bg-gray-50 ${
+                      pathname === item.href ? 'font-bold text-primary-var' : 'font-medium text-gray-700'
+                    }`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.name}
