@@ -78,17 +78,23 @@ export default function Home() {
             src="/images/hero.png" 
             alt="Luxury Furniture" 
             fill
-            className="object-cover"
+            className="object-cover object-bottom md:object-center"
             priority
           />
         </div>
         
         {/* Hero content */}
-        <div className="relative z-10 container mx-auto px-4 py-32 flex flex-col items-center text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 max-w-3xl">
+        <div className="relative z-10 container mx-auto px-4 py-16 md:py-32 flex flex-col items-center text-center">
+          <h1 className="text-3xl font-bold text-white mb-4 max-w-3xl block md:hidden">
+            Timeless Furniture
+          </h1>
+          <h1 className="hidden md:block text-5xl md:text-6xl font-bold text-white mb-6 max-w-3xl">
             Transform Your Space with Timeless Furniture
           </h1>
-          <p className="text-xl text-white mb-10 max-w-2xl">
+          <p className="text-base text-white mb-6 max-w-2xl block md:hidden">
+            Handcrafted pieces that blend comfort and style.
+          </p>
+          <p className="hidden md:block text-xl text-white mb-10 max-w-2xl">
             Discover handcrafted pieces that blend comfort, style, and sustainability for your modern home.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
@@ -105,14 +111,14 @@ export default function Home() {
         <div className="relative z-10 bg-white py-12 shadow-lg">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">Shop by Category</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6">
               {categories.map((category, index) => (
                 <Link 
                   key={index} 
                   href={`/products?category=${category.name.toLowerCase()}`}
-                  className="bg-gray-50 rounded-xl p-6 text-center hover:bg-primary hover:text-white transition duration-300 cursor-pointer group"
+                  className="bg-gray-50 rounded-xl p-4 sm:p-6 text-center hover:bg-primary hover:text-white transition duration-300 cursor-pointer group"
                 >
-                  <div className="relative w-16 h-16 mx-auto mb-4 overflow-hidden rounded-xl">
+                  <div className="relative w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 overflow-hidden rounded-xl">
                     <Image 
                       src={category.image} 
                       alt={`${category.name} category`}
@@ -120,8 +126,8 @@ export default function Home() {
                       className="object-cover group-hover:scale-110 transition-transform duration-300"
                     />
                   </div>
-                  <h3 className="text-xl font-semibold">{category.name}</h3>
-                  <p className="text-gray-600 group-hover:text-white">{category.productCount}</p>
+                  <h3 className="text-lg sm:text-xl font-semibold">{category.name}</h3>
+                  <p className="hidden sm:block text-gray-600 group-hover:text-white text-sm sm:text-base">{category.productCount}</p>
                 </Link>
               ))}
             </div>

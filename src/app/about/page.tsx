@@ -41,7 +41,7 @@ export default function AboutPage() {
                 src="/images/hero.png" 
                 alt="Habitsh Furniture Workshop" 
                 fill
-                className="object-cover"
+                className="object-cover object-bottom md:object-center"
               />
             </div>
           </div>
