@@ -1,6 +1,9 @@
 // src/app/page.js
 import ProductGrid from '@/components/ProductGrid';
 import Footer from '@/components/Footer';
+import FeaturesCarousel from '@/components/FeaturesCarousel';
+import HeroSection from '@/components/HeroSection';
+import ShopByCategory from '@/components/ShopByCategory';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -70,75 +73,26 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Enhanced Hero Section */}
-      <section className="relative">
-        {/* Background image */}
-        <div className="absolute inset-0 z-0">
-          <Image 
-            src="/images/hero.png" 
-            alt="Luxury Furniture" 
-            fill
-            className="object-cover object-bottom md:object-center"
-            priority
-          />
+      <HeroSection>
+        <h1 className="text-3xl font-bold text-white mb-4 max-w-3xl block md:hidden">Timeless Furniture</h1>
+        <h1 className="hidden md:block text-5xl md:text-6xl font-bold text-white mb-6 max-w-3xl">Transform Your Space with Timeless Furniture</h1>
+        <p className="text-base text-white mb-6 max-w-2xl block md:hidden">Handcrafted pieces that blend comfort and style.</p>
+        <p className="hidden md:block text-xl text-white mb-10 max-w-2xl">Discover handcrafted pieces that blend comfort, style, and sustainability for your modern home.</p>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <button className="bg-primary hover:bg-teal-800 text-white px-8 py-4 rounded-full text-lg font-medium transition duration-300 transform hover:scale-105">Shop Collection</button>
+          <button className="bg-white hover:bg-gray-100 text-gray-900 px-8 py-4 rounded-full text-lg font-medium transition duration-300">Explore Designs</button>
         </div>
-        
-        {/* Hero content */}
-        <div className="relative z-10 container mx-auto px-4 py-16 md:py-32 flex flex-col items-center text-center">
-          <h1 className="text-3xl font-bold text-white mb-4 max-w-3xl block md:hidden">
-            Timeless Furniture
-          </h1>
-          <h1 className="hidden md:block text-5xl md:text-6xl font-bold text-white mb-6 max-w-3xl">
-            Transform Your Space with Timeless Furniture
-          </h1>
-          <p className="text-base text-white mb-6 max-w-2xl block md:hidden">
-            Handcrafted pieces that blend comfort and style.
-          </p>
-          <p className="hidden md:block text-xl text-white mb-10 max-w-2xl">
-            Discover handcrafted pieces that blend comfort, style, and sustainability for your modern home.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <button className="bg-primary hover:bg-teal-800 text-white px-8 py-4 rounded-full text-lg font-medium transition duration-300 transform hover:scale-105">
-              Shop Collection
-            </button>
-            <button className="bg-white hover:bg-gray-100 text-gray-900 px-8 py-4 rounded-full text-lg font-medium transition duration-300">
-              Explore Designs
-            </button>
-          </div>
-        </div>
-        
-        {/* Featured categories */}
-        <div className="relative z-10 bg-white py-12 shadow-lg">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">Shop by Category</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6">
-              {categories.map((category, index) => (
-                <Link 
-                  key={index} 
-                  href={`/products?category=${category.name.toLowerCase()}`}
-                  className="bg-gray-50 rounded-xl p-4 sm:p-6 text-center hover:bg-primary hover:text-white transition duration-300 cursor-pointer group"
-                >
-                  <div className="relative w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 overflow-hidden rounded-xl">
-                    <Image 
-                      src={category.image} 
-                      alt={`${category.name} category`}
-                      fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-300"
-                    />
-                  </div>
-                  <h3 className="text-lg sm:text-xl font-semibold">{category.name}</h3>
-                  <p className="hidden sm:block text-gray-600 group-hover:text-white text-sm sm:text-base">{category.productCount}</p>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-      
+      </HeroSection>
+
       {/* Features section */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Mobile: carousel; Desktop: static grid */}
+          <div className="md:hidden">
+            <FeaturesCarousel features={heroFeatures} />
+          </div>
+
+          <div className="hidden md:grid md:grid-cols-4 gap-8">
             {heroFeatures.map((feature, index) => (
               <div key={index} className="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center text-center">
                 <div className="bg-primary-100 text-primary p-4 rounded-full mb-4">
@@ -151,6 +105,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <ShopByCategory categories={categories} />
       
       {/* Product showcase */}
       <main className="flex-grow container mx-auto px-4 py-16">
