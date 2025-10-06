@@ -10,9 +10,40 @@ export default function Footer() {
               Premium furniture for modern living spaces. Quality craftsmanship and sustainable materials designed to last.
             </p>
             <div className="flex space-x-4">
-              {['facebook', 'twitter', 'instagram', 'pinterest'].map((social) => (
-                <a key={social} href="#" className="bg-gray-800 p-2 rounded-full hover:bg-primary transition">
-                  <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
+              {[
+                { id: 'facebook', href: 'https://facebook.com', label: 'Facebook' },
+                { id: 'twitter', href: 'https://twitter.com', label: 'Twitter' },
+                { id: 'instagram', href: 'https://instagram.com', label: 'Instagram' },
+                { id: 'pinterest', href: 'https://pinterest.com', label: 'Pinterest' },
+              ].map((s) => (
+                <a
+                  key={s.id}
+                  href={s.href}
+                  aria-label={s.label}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="bg-gray-800 p-2 rounded-full hover:bg-primary hover:text-white transition"
+                >
+                  {s.id === 'facebook' && (
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+                      <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.99 3.657 9.128 8.438 9.878v-6.99H7.898v-2.888h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.47h-1.26c-1.242 0-1.63.772-1.63 1.562v1.875h2.773l-.443 2.888h-2.33v6.99C18.343 21.128 22 16.99 22 12z" />
+                    </svg>
+                  )}
+                  {s.id === 'twitter' && (
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+                      <path d="M22.46 6c-.77.35-1.6.58-2.46.69a4.3 4.3 0 0 0 1.88-2.37 8.6 8.6 0 0 1-2.72 1.04 4.28 4.28 0 0 0-7.3 3.9A12.14 12.14 0 0 1 3.16 4.9a4.28 4.28 0 0 0 1.33 5.71 4.24 4.24 0 0 1-1.94-.54v.05a4.28 4.28 0 0 0 3.43 4.2c-.49.13-1.01.2-1.55.2-.38 0-.75-.04-1.11-.1a4.29 4.29 0 0 0 4 2.97A8.58 8.58 0 0 1 2 19.54a12.1 12.1 0 0 0 6.56 1.92c7.88 0 12.2-6.53 12.2-12.2l-.01-.56A8.72 8.72 0 0 0 22.46 6z" />
+                    </svg>
+                  )}
+                  {s.id === 'instagram' && (
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+                      <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 6.5A3.5 3.5 0 1 0 15.5 12 3.5 3.5 0 0 0 12 8.5zm4.8-3.9a1.2 1.2 0 1 0 1.2 1.2 1.2 1.2 0 0 0-1.2-1.2z" />
+                    </svg>
+                  )}
+                  {s.id === 'pinterest' && (
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+                      <path d="M12 2C6.48 2 2 6.48 2 12c0 4.08 2.43 7.56 5.92 9.08-.08-.77-.15-1.95.03-2.79.16-.68 1.03-4.34 1.03-4.34s-.26-.52-.26-1.29c0-1.21.7-2.12 1.57-2.12.74 0 1.1.56 1.1 1.23 0 .75-.48 1.87-.73 2.91-.21.88.45 1.6 1.33 1.6 1.6 0 2.84-1.68 2.84-4.09 0-2.14-1.54-3.64-3.74-3.64-2.55 0-4.06 1.9-4.06 3.87 0 .76.29 1.58.66 2.03.07.08.08.15.06.23-.07.25-.23.78-.26.89-.04.14-.14.17-.33.1-1.18-.55-1.92-2.25-1.92-3.62 0-2.95 2.14-5.66 6.17-5.66 3.24 0 5.76 2.31 5.76 5.4 0 3.22-2.03 5.82-4.85 5.82-0.95 0-1.84-.49-2.14-1.07 0 0-.5 1.9-.62 2.32-.22.79-.65 1.58-1.05 2.21C9.46 21.85 10.7 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z" />
+                    </svg>
+                  )}
                 </a>
               ))}
             </div>
