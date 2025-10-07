@@ -85,21 +85,21 @@ export default function Home() {
       </HeroSection>
 
       {/* Features section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-8 bg-gray-50">
         <div className="container mx-auto px-4">
           {/* Mobile: carousel; Desktop: static grid */}
           <div className="md:hidden">
             <FeaturesCarousel features={heroFeatures} />
           </div>
 
-          <div className="hidden md:grid md:grid-cols-4 gap-8">
+          <div className="hidden md:grid md:grid-cols-4 gap-4">
             {heroFeatures.map((feature, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center text-center">
-                <div className="bg-primary-100 text-primary p-4 rounded-full mb-4">
+              <div key={index} className="bg-white p-2 rounded-lg shadow-sm flex flex-col items-center text-center">
+                <div className="bg-primary-100 text-primary p-2 rounded-full mb-2">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <h3 className="text-sm font-semibold mb-1 truncate">{feature.title}</h3>
+                <p className="text-gray-600 text-sm truncate">{feature.description}</p>
               </div>
             ))}
           </div>

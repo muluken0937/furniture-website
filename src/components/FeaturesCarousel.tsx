@@ -17,10 +17,17 @@ export default function FeaturesCarousel({ features = [] }: { features?: Feature
 
   const total = features.length;
 
+  // keep an extended slides array (duplicated) so we can create a seamless loop
+  const extendedSlides = [...features, ...features];
+
+  const transitionMs = 400;
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitionEnabled, setIsTransitionEnabled] = useState(true);
+
   // start auto sliding
   useEffect(() => {
     timerRef.current = window.setInterval(() => {
-      if (!pausedRef.current) setIndex((i) => (i + 1) % total);
+      if (!pausedRef.current) setCurrentIndex((i) => i + 1);
     }, 3000);
     return () => {
       if (timerRef.current) window.clearInterval(timerRef.current);
@@ -30,8 +37,36 @@ export default function FeaturesCarousel({ features = [] }: { features?: Feature
 
   if (total === 0) return null;
 
-  const handlePrev = () => setIndex((i) => (i - 1 + total) % total);
-  const handleNext = () => setIndex((i) => (i + 1) % total);
+  const handlePrev = () => setCurrentIndex((i) => i - 1);
+  const handleNext = () => setCurrentIndex((i) => i + 1);
+
+  // when we advance past the original slides (i.e., reach index === total),
+  // wait for the transition to finish then jump back to the original index
+  useEffect(() => {
+    if (currentIndex === total) {
+      // after the transition ends, disable transition and reset index to 0
+      const t = window.setTimeout(() => {
+        setIsTransitionEnabled(false);
+        setCurrentIndex((i) => i - total);
+        // re-enable transition on next tick
+        requestAnimationFrame(() => {
+          // tiny timeout to ensure DOM updated
+          setTimeout(() => setIsTransitionEnabled(true), 20);
+        });
+      }, transitionMs);
+      return () => window.clearTimeout(t);
+    }
+
+    // also handle negative wrap (if user goes prev from 0 to -1)
+    if (currentIndex === -1) {
+      const t = window.setTimeout(() => {
+        setIsTransitionEnabled(false);
+        setCurrentIndex((i) => i + total);
+        requestAnimationFrame(() => setTimeout(() => setIsTransitionEnabled(true), 20));
+      }, transitionMs);
+      return () => window.clearTimeout(t);
+    }
+  }, [currentIndex, total]);
 
   const onTouchStart = (e: React.TouchEvent) => {
     pausedRef.current = true;
@@ -58,8 +93,8 @@ export default function FeaturesCarousel({ features = [] }: { features?: Feature
     setTimeout(() => { pausedRef.current = false; }, 500);
   };
 
-  const slides = features; // single set, we wrap using modulo
-  const translateX = -index * 50; // each slide is 50% width (two visible)
+  const slides = extendedSlides; // duplicated set for seamless looping
+  const translateX = -currentIndex * 50; // each slide is 50% width (two visible)
 
   return (
     <div className="w-full overflow-hidden">
@@ -71,17 +106,17 @@ export default function FeaturesCarousel({ features = [] }: { features?: Feature
           onTouchEnd={onTouchEnd}
           style={{
             transform: `translateX(${translateX}%)`,
-            transition: 'transform 400ms ease'
+            transition: isTransitionEnabled ? `transform ${transitionMs}ms ease` : 'none'
           }}
         >
           {slides.map((f, i) => (
-            <div key={i} className="flex-shrink-0 w-1/2 p-2">
-              <div className="bg-white rounded-xl shadow-sm flex flex-col items-center text-center h-auto p-2 max-h-40">
-                <div className="bg-primary-100 text-primary p-2 rounded-full mb-2">
+            <div key={i} className="flex-shrink-0 w-1/2 p-1">
+              <div className="bg-white rounded-lg shadow-sm flex flex-col items-center text-center h-auto p-1 max-h-32 lg:max-h-24">
+                <div className="bg-primary-100 text-primary p-1.5 rounded-full mb-1">
                   {f.icon}
                 </div>
-                <h3 className="text-xs font-bold mb-1 truncate">{f.title}</h3>
-                <p className="text-gray-600 text-[11px] truncate">{f.description}</p>
+                <h3 className="text-[11px] font-semibold mb-0.5 truncate">{f.title}</h3>
+                <p className="text-gray-600 text-[10px] truncate">{f.description}</p>
               </div>
             </div>
           ))}
