@@ -19,7 +19,8 @@ const UsersPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const apiUrl = getApiUrl();
+  // apiUrl is intentionally unused in this placeholder implementation
+  void getApiUrl;
 
   useEffect(() => {
     fetchUsers();

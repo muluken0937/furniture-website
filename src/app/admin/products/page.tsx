@@ -33,6 +33,9 @@ const ProductsPage: React.FC = () => {
 
   useEffect(() => {
     fetchProducts();
+    // fetchProducts is stable within this component; intentionally not added to deps
+    // to avoid recreating the function every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchProducts = async () => {
@@ -131,7 +134,7 @@ const ProductsPage: React.FC = () => {
                             <span className={`ml-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                               product.is_active ? 'bg-success/20 text-success' : 'bg-red-100 text-red-800'
                             }`}>
-                              {product.is_active ? 'Active' : 'Inactive'}
+                            {product.is_active ? 'Active' : 'Inactive'}
                             </span>
                           </div>
                           <p className="text-sm text-gray-500 mt-1">{product.description}</p>

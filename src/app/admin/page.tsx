@@ -29,7 +29,7 @@ const AdminDashboard: React.FC = () => {
     totalUsers: 0,
     totalRevenue: 0,
   });
-  const [loading, setLoading] = useState(true);
+  // loading state not required for this dashboard; remove unused variable
 
   useEffect(() => {
     fetchDashboardData();
@@ -55,8 +55,6 @@ const AdminDashboard: React.FC = () => {
       });
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
-    } finally {
-      setLoading(false);
     }
   };
 

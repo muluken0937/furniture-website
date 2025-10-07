@@ -25,7 +25,7 @@ const AdminLogin: React.FC = () => {
       } else {
         setError('Invalid credentials');
       }
-    } catch (err) {
+    } catch {
       setError('Login failed. Please try again.');
     } finally {
       setLoading(false);

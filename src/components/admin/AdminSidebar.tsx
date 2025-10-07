@@ -17,7 +17,7 @@ import {
 
 const AdminSidebar: React.FC = () => {
   const pathname = usePathname();
-  const { isAdmin, isStaff } = useAuth();
+  const { isAdmin } = useAuth();
 
   const navigation = [
     { name: 'Dashboard', href: '/admin', icon: HomeIcon, roles: ['admin', 'staff'] },
