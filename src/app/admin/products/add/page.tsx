@@ -45,20 +45,20 @@ const AddProductPage: React.FC = () => {
   const apiUrl = getApiUrl();
 
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/api/categories/`);
+        const data = await response.json();
+        setCategories(data.results || data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch(`${apiUrl}/api/categories/`);
-      const data = await response.json();
-      setCategories(data.results || data);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchCategories();
+  }, [apiUrl]);
 
   const validateStep1 = (): boolean => {
     const errors: Record<string, string> = {};
@@ -154,7 +154,7 @@ const AddProductPage: React.FC = () => {
     }
   };
 
-  const handleInputChange = (name: string, value: any) => {
+  const handleInputChange = (name: string, value: string | number | boolean) => {
     const updatedFormData = { ...formData, [name]: value };
     setFormData(updatedFormData);
     
@@ -171,8 +171,9 @@ const AddProductPage: React.FC = () => {
       
       // Create preview
       const reader = new FileReader();
-      reader.onload = (e) => {
-        setImagePreview(e.target?.result as string);
+      reader.onload = (ev: ProgressEvent<FileReader>) => {
+        const result = ev.target?.result;
+        if (typeof result === 'string') setImagePreview(result);
       };
       reader.readAsDataURL(file);
     }
