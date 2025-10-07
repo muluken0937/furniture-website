@@ -1,15 +1,15 @@
 // src/components/Footer.js
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-white pt-16 pb-8">
+    <footer className="bg-gray-900 text-white pt-12 pb-8">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 md:gap-8">
           <div className="lg:col-span-2">
-            <h3 className="text-2xl font-bold mb-4">Habitsh Furniture</h3>
-            <p className="text-gray-400 mb-6 max-w-md">
+            <h3 className="text-xl sm:text-2xl font-bold mb-3">Habitsh Furniture</h3>
+            <p className="text-gray-400 mb-4 max-w-md text-sm">
               Premium furniture for modern living spaces. Quality craftsmanship and sustainable materials designed to last.
             </p>
-            <div className="flex space-x-4">
+            <div className="flex flex-wrap gap-3 md:gap-4 items-center">
               {[
                 { id: 'facebook', href: 'https://facebook.com', label: 'Facebook' },
                 { id: 'twitter', href: 'https://twitter.com', label: 'Twitter' },
@@ -22,7 +22,7 @@ export default function Footer() {
                   aria-label={s.label}
                   target="_blank"
                   rel="noreferrer"
-                  className="bg-gray-800 p-2 rounded-full hover:bg-primary hover:text-white transition"
+                  className="bg-gray-800 p-2 rounded-full hover:bg-primary hover:text-white transition flex items-center justify-center"
                 >
                   {s.id === 'facebook' && (
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
@@ -50,26 +50,26 @@ export default function Footer() {
           </div>
           
           <div>
-            <h4 className="font-semibold text-lg mb-4">Shop</h4>
-            <ul className="space-y-2 text-gray-400">
+            <h4 className="font-semibold text-base mb-2">Shop</h4>
+            <ul className="flex flex-col gap-2 text-gray-400 text-sm">
               {['All Products', 'Living Room', 'Bedroom', 'Dining', 'Office', 'Outdoor'].map(item => (
-                <li key={item} className="hover:text-white cursor-pointer">{item}</li>
+                <li key={item} className="hover:text-white cursor-pointer py-0.5">{item}</li>
               ))}
             </ul>
           </div>
           
           <div>
-            <h4 className="font-semibold text-lg mb-4">Help</h4>
-            <ul className="space-y-2 text-gray-400">
+            <h4 className="font-semibold text-base mb-2">Help</h4>
+            <ul className="flex flex-col gap-2 text-gray-400 text-sm">
               {['Customer Service', 'Track Order', 'Returns & Exchanges', 'Shipping Info', 'FAQ'].map(item => (
-                <li key={item} className="hover:text-white cursor-pointer">{item}</li>
+                <li key={item} className="hover:text-white cursor-pointer py-0.5">{item}</li>
               ))}
             </ul>
           </div>
           
           <div>
-            <h4 className="font-semibold text-lg mb-4">Contact</h4>
-            <ul className="space-y-2 text-gray-400">
+            <h4 className="font-semibold text-base mb-2">Contact</h4>
+            <ul className="flex flex-col gap-2 text-gray-400 text-sm">
               <li className="flex items-start">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -92,8 +92,9 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500">
-          © {new Date().getFullYear()} Habitsh Furniture. All rights reserved.
+        <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 md:flex md:justify-between md:items-center">
+          <div className="mb-4 md:mb-0">© {new Date().getFullYear()} Habitsh Furniture. All rights reserved.</div>
+          <div className="text-sm text-gray-400">Designed with care · Privacy · Terms</div>
         </div>
       </div>
     </footer>

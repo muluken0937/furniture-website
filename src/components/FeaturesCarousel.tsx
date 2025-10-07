@@ -8,69 +8,80 @@ type Feature = {
   icon: React.ReactNode;
 };
 
-export default function FeaturesCarousel({ features }: { features: Feature[] }) {
-  const visible = 2; // show two cards at a time
+export default function FeaturesCarousel({ features = [] }: { features?: Feature[] }) {
   const [index, setIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(true);
   const timerRef = useRef<number | null>(null);
-  const trackRef = useRef<HTMLDivElement | null>(null);
+  const pausedRef = useRef(false);
+  const touchStartX = useRef<number | null>(null);
+  const touchDeltaX = useRef(0);
 
   const total = features.length;
-  if (!features || total === 0) return null;
 
+  // start auto sliding
   useEffect(() => {
-    // start auto sliding
     timerRef.current = window.setInterval(() => {
-      setIsTransitioning(true);
-      setIndex((i) => i + 1);
+      if (!pausedRef.current) setIndex((i) => (i + 1) % total);
     }, 3000);
     return () => {
       if (timerRef.current) window.clearInterval(timerRef.current);
     };
-  }, []);
+    // total is stable for this effect; we purposely only depend on total
+  }, [total]);
 
-  useEffect(() => {
-    // handle loop reset when index reaches total
-    if (index > total) {
-      // after transition to duplicate first slide, jump back to start without animation
-      const t = setTimeout(() => {
-        setIsTransitioning(false);
-        setIndex(1);
-        // re-enable transition on next tick
-        requestAnimationFrame(() => {
-          setIsTransitioning(true);
-        });
-      }, 600);
-      return () => clearTimeout(t);
+  if (total === 0) return null;
+
+  const handlePrev = () => setIndex((i) => (i - 1 + total) % total);
+  const handleNext = () => setIndex((i) => (i + 1) % total);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    pausedRef.current = true;
+    touchStartX.current = e.touches[0].clientX;
+    touchDeltaX.current = 0;
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (touchStartX.current == null) return;
+    touchDeltaX.current = e.touches[0].clientX - touchStartX.current;
+  };
+
+  const onTouchEnd = () => {
+    const delta = touchDeltaX.current;
+    const threshold = 40; // px
+    if (delta > threshold) {
+      handlePrev();
+    } else if (delta < -threshold) {
+      handleNext();
     }
-  }, [index, total]);
+    touchStartX.current = null;
+    touchDeltaX.current = 0;
+    // resume after short delay
+    setTimeout(() => { pausedRef.current = false; }, 500);
+  };
 
-  // build slides: duplicate features to allow seamless loop
-  const slides = [...features, ...features];
-
-  const translatePercent = -(index * (100 / (visible * (slides.length / visible)) )) * visible; // simplified below
-  // simpler: each slide width = 50% so translate per index = index * 50%
-  const translateX = -index * 50;
+  const slides = features; // single set, we wrap using modulo
+  const translateX = -index * 50; // each slide is 50% width (two visible)
 
   return (
     <div className="w-full overflow-hidden">
       <div className="mx-auto max-w-4xl">
         <div
-          ref={trackRef}
           className="flex"
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
           style={{
             transform: `translateX(${translateX}%)`,
-            transition: isTransitioning ? 'transform 600ms ease' : 'none'
+            transition: 'transform 400ms ease'
           }}
         >
           {slides.map((f, i) => (
-            <div key={i} className="flex-shrink-0 w-1/2 md:w-1/4 p-2 md:p-4">
-              <div className="bg-white rounded-xl shadow-sm flex flex-col items-center text-center h-auto p-2 md:p-4 max-h-44 md:max-h-48">
-                <div className="bg-primary-100 text-primary p-2 md:p-3 rounded-full mb-2 md:mb-3">
+            <div key={i} className="flex-shrink-0 w-1/2 p-2">
+              <div className="bg-white rounded-xl shadow-sm flex flex-col items-center text-center h-auto p-2 max-h-40">
+                <div className="bg-primary-100 text-primary p-2 rounded-full mb-2">
                   {f.icon}
                 </div>
-                <h3 className="text-xs md:text-lg font-bold mb-1 md:mb-2 truncate">{f.title}</h3>
-                <p className="text-gray-600 text-[11px] md:text-sm truncate">{f.description}</p>
+                <h3 className="text-xs font-bold mb-1 truncate">{f.title}</h3>
+                <p className="text-gray-600 text-[11px] truncate">{f.description}</p>
               </div>
             </div>
           ))}
