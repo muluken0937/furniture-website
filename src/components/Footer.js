@@ -49,22 +49,27 @@ export default function Footer() {
             </div>
           </div>
           
-          <div>
-            <h4 className="font-semibold text-base mb-2">Shop</h4>
-            <ul className="flex flex-col gap-2 text-gray-400 text-sm">
-              {['All Products', 'Living Room', 'Bedroom', 'Dining', 'Office', 'Outdoor'].map(item => (
-                <li key={item} className="hover:text-white cursor-pointer py-0.5">{item}</li>
-              ))}
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-semibold text-base mb-2">Help</h4>
-            <ul className="flex flex-col gap-2 text-gray-400 text-sm">
-              {['Customer Service', 'Track Order', 'Returns & Exchanges', 'Shipping Info', 'FAQ'].map(item => (
-                <li key={item} className="hover:text-white cursor-pointer py-0.5">{item}</li>
-              ))}
-            </ul>
+          {/* Shop + Help combined into two columns while preserving rows */}
+          <div className="sm:col-span-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-semibold text-base mb-2">Shop</h4>
+                <ul className="flex flex-col gap-2 text-gray-400 text-sm">
+                  {['All Products', 'Living Room', 'Bedroom', 'Dining', 'Office', 'Outdoor'].map(item => (
+                    <li key={item} className="hover:text-white cursor-pointer py-0.5">{item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-base mb-2">Help</h4>
+                <ul className="flex flex-col gap-2 text-gray-400 text-sm">
+                  {['Customer Service', 'Track Order', 'Returns & Exchanges', 'Shipping Info', 'FAQ'].map(item => (
+                    <li key={item} className="hover:text-white cursor-pointer py-0.5">{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
           
           <div>
