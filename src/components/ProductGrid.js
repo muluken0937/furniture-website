@@ -160,7 +160,7 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
 
   const ProductCard = ({ product, isHomePage = false }) => (
     <div className={`bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition group ${isHomePage ? 'flex-shrink-0 w-80' : 'w-full'}`}>
-            <div className="relative h-64">
+            <div className="relative h-48 sm:h-56 md:h-64">
               <Image 
                 src={product.image} 
                 alt={product.name} 
