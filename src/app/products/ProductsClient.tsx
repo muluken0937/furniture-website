@@ -8,6 +8,7 @@ import ProductGrid from '@/components/ProductGrid';
 export default function ProductsClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   
   // Filter state
   const [filters, setFilters] = useState({
@@ -92,7 +93,8 @@ export default function ProductsClient() {
         <div className="bg-gray-50 py-4">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-4xl font-bold text-gray-900 mb-2">Our Products</h1>
-            <p className="text-gray-600">Discover our collection of premium furniture for every space</p>
+            <p className="text-gray-600 hidden sm:block">Discover our collection of premium furniture for every space</p>
+            <p className="text-gray-600 sm:hidden">Premium furniture for every space</p>
             
             {/* Search Bar */}
             <div className="max-w-md mx-auto mt-6">
@@ -124,11 +126,46 @@ export default function ProductsClient() {
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-2">
-          <div className="flex flex-col lg:flex-row lg:bg-white lg:rounded-lg lg:shadow-md lg:overflow-hidden lg:h-[calc(100vh-200px)]">
+        <div className="container mx-auto px-2 sm:px-4 py-2">
+          <div className="flex flex-col md:flex-row lg:bg-white lg:rounded-lg lg:shadow-md lg:overflow-hidden md:h-[calc(100vh-200px)] lg:h-[calc(100vh-200px)]">
             {/* Filters Section - Left Side */}
-            <div className="lg:w-1/6 lg:border-r lg:border-gray-200 lg:flex lg:flex-col">
-              <div className="bg-gray-50 px-4 pb-6 pt-0 lg:sticky lg:top-16 lg:h-full lg:overflow-y-auto">
+            <aside className="md:w-1/4 lg:w-1/6 lg:border-r lg:border-gray-200 lg:flex lg:flex-col">
+              {/* Mobile filter toggle (icon attached to header) */}
+              <div className="flex items-center md:hidden bg-gray-50 px-4 py-3 justify-between">
+                <h2 className="text-lg font-semibold flex items-center">
+                  Filters
+                  <button
+                    onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                    className="ml-2 p-1 bg-white border border-gray-300 rounded-md flex items-center justify-center"
+                    aria-expanded={isFiltersOpen}
+                    aria-label="Toggle filters"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className={'h-4 w-4 text-gray-600 transform transition-transform ' + (isFiltersOpen ? 'rotate-180' : 'rotate-0')} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                </h2>
+
+                {/* Mobile sort (placed at right of Filters on mobile) */}
+                <div className="flex items-center space-x-2">
+                  <label className="text-gray-600 text-sm">Sort by</label>
+                  <select
+                    value={filters.sort}
+                    onChange={(e) => handleSortChange(e.target.value)}
+                    className="border border-gray-300 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  >
+                    <option value="featured">Featured</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="newest">Newest</option>
+                    <option value="rating">Best Rated</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className={'bg-gray-50 px-4 pb-6 pt-0 lg:sticky lg:top-16 lg:h-full lg:overflow-y-auto ' + (isFiltersOpen ? 'block md:block' : 'hidden md:block')}>
+                {/* Full filters: visible on md+ always, on mobile only when opened */}
+                <div className="block">
                 <h2 className="text-xl font-semibold mb-6">Filters</h2>
                 
                 {/* Category Filter */}
@@ -338,19 +375,16 @@ export default function ProductsClient() {
                   Clear All Filters
                 </button>
               </div>
+
+                {/* removed compact tablet-only view so full filters show everywhere */}
             </div>
+            </aside>
 
             {/* Product List Section - Right Side */}
-            <div className="lg:w-5/6 lg:pl-6 lg:flex lg:flex-col lg:h-full">
-              <div className="p-6 lg:flex-1 lg:overflow-y-auto">
-                <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
-                  <div className="flex items-center space-x-4 mb-4 sm:mb-0">
-                    <span className="text-gray-600">
-                      Showing results for: {filters.category === 'all' ? 'All Categories' : filters.category.charAt(0).toUpperCase() + filters.category.slice(1)}
-                      {filters.search && ` - "${filters.search}"`}
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-2">
+            <main className="md:w-3/4 lg:w-5/6 lg:pl-6 lg:flex lg:flex-col lg:h-full">
+              <div className="p-4 sm:p-6 lg:flex-1 lg:overflow-y-auto min-h-0">
+                <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
+                  <div className="hidden md:flex items-center space-x-2">
                     <span className="text-gray-600">Sort by:</span>
                     <select 
                       value={filters.sort}
@@ -364,6 +398,13 @@ export default function ProductsClient() {
                       <option value="rating">Best Rated</option>
                     </select>
                   </div>
+
+                  {/* Showing results for - only visible on md+ placed to the right */}
+                  <div className="hidden md:flex items-center">
+                    <span className="text-gray-600">
+                      Showing results for: {filters.category === 'all' ? 'All Categories' : filters.category.charAt(0).toUpperCase() + filters.category.slice(1)}{filters.search ? ' - "' + filters.search + '"' : ''}
+                    </span>
+                  </div>
                 </div>
 
                 <ProductGrid 
@@ -372,9 +413,10 @@ export default function ProductsClient() {
                   priceRange={getPriceRangeArray(filters.priceRange)}
                   sortBy={filters.sort}
                   searchQuery={filters.search}
+                  smallVariant={true}
                 />
               </div>
-            </div>
+            </main>
           </div>
         </div>
       </main>
