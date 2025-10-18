@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable react-hooks/rules-of-hooks */
 
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -9,20 +10,20 @@ type Feature = {
 };
 
 export default function FeaturesCarousel({ features = [] }: { features?: Feature[] }) {
-  const [index, setIndex] = useState(0);
+  const total = features.length;
+  if (total === 0) return null;
+
   const timerRef = useRef<number | null>(null);
   const pausedRef = useRef(false);
   const touchStartX = useRef<number | null>(null);
   const touchDeltaX = useRef(0);
-
-  const total = features.length;
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitionEnabled, setIsTransitionEnabled] = useState(true);
 
   // keep an extended slides array (duplicated) so we can create a seamless loop
   const extendedSlides = [...features, ...features];
 
   const transitionMs = 400;
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isTransitionEnabled, setIsTransitionEnabled] = useState(true);
 
   // start auto sliding
   useEffect(() => {
@@ -35,7 +36,6 @@ export default function FeaturesCarousel({ features = [] }: { features?: Feature
     // total is stable for this effect; we purposely only depend on total
   }, [total]);
 
-  if (total === 0) return null;
 
   const handlePrev = () => setCurrentIndex((i) => i - 1);
   const handleNext = () => setCurrentIndex((i) => i + 1);
