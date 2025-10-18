@@ -1,7 +1,7 @@
 // src/components/ProductGrid.js
 import Image from 'next/image';
 
-export default function ProductGrid({ selectedCategory = 'all', selectedType = 'all', priceRange = [0, 5000], sortBy = 'featured', searchQuery = '', isHomePage = false }) {
+export default function ProductGrid({ selectedCategory = 'all', selectedType = 'all', priceRange = [0, 5000], sortBy = 'featured', searchQuery = '', isHomePage = false, smallVariant = false }) {
   const products = [
     { 
       id: 1, 
@@ -159,8 +159,8 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
   });
 
   const ProductCard = ({ product, isHomePage = false }) => (
-    <div className={`bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition group ${isHomePage ? 'flex-shrink-0 w-80' : 'w-full'}`}>
-            <div className="relative h-48 sm:h-56 md:h-64">
+    <div className={`bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition group ${isHomePage ? 'flex-shrink-0 w-72' : 'w-full'}`}>
+            <div className={`${smallVariant ? 'relative h-28 sm:h-34 md:h-40' : 'relative h-40 sm:h-52 md:h-64'}`}>
               <Image 
                 src={product.image} 
                 alt={product.name} 
@@ -178,7 +178,7 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
           </span>
         </div>
             </div>
-            <div className="p-6">
+            <div className={`${smallVariant ? 'p-2' : 'p-4'}`}>
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm text-gray-500 capitalize">{product.type}</span>
           <div className="flex items-center">
@@ -186,10 +186,10 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
             <span className="text-sm text-gray-600">{product.rating}</span>
                 </div>
               </div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
+        <h3 className={`${smallVariant ? 'text-sm' : 'text-base'} font-semibold text-gray-900 mb-2`}>{product.name}</h3>
         <div className="flex items-center justify-between">
-          <span className="text-2xl font-bold text-primary">${product.price}</span>
-          <button className="text-white px-4 py-2 rounded-lg transition duration-200 bg-secondary-var border-2 border-secondary-var hover:opacity-90">
+          <span className={`${smallVariant ? 'text-base' : 'text-xl'} font-bold text-primary`}>${product.price}</span>
+          <button className={`${smallVariant ? 'text-white px-2 py-1 rounded-md text-sm' : 'text-white px-4 py-2 rounded-lg'} transition duration-200 bg-secondary-var border-2 border-secondary-var hover:opacity-90`}>
                   Add 
                 </button>
               </div>
@@ -258,7 +258,7 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4">
+        <div className={`grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ${smallVariant ? 'gap-2 p-0.5' : 'gap-4 p-2'} sm:overflow-y-visible md:overflow-y-auto lg:overflow-visible md:max-h-[calc(100vh-220px)] lg:max-h-none md:mb-28`}>
           {sortedProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
