@@ -196,19 +196,20 @@ const AddProductPage: React.FC = () => {
       <AdminLayout>
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="mb-2">
-            <div className="flex items-center justify-between mb-2">
+          <div className="mb-3 sm:mb-4">
+            <div className="flex items-center justify-between mb-2 sm:mb-3">
               <button
                 onClick={() => router.back()}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-accent hover:text-gray-700 hover:bg-accent/10 rounded-lg border border-accent/20 hover:border-accent/40 transition-all duration-200 group"
+                className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-accent hover:text-gray-700 hover:bg-accent/10 rounded-lg border border-accent/20 hover:border-accent/40 transition-all duration-200 group"
               >
-                <ArrowLeftIcon className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-                Back to Products
+                <ArrowLeftIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 group-hover:-translate-x-1 transition-transform" />
+                <span className="hidden sm:inline">Back to Products</span>
+                <span className="sm:hidden">Back</span>
               </button>
             </div>
-            <div className="text-center">
-              <h1 className="text-4xl font-bold text-gray-900 mb-1">Add New Product</h1>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <div className="text-center px-2">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1">Add New Product</h1>
+              <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto">
                 {currentStep === 1 
                   ? "Enter the basic product information" 
                   : "Add product image and finalize details"}
@@ -217,40 +218,40 @@ const AddProductPage: React.FC = () => {
           </div>
 
           {/* Progress Bar */}
-            <div className="mb-4">
-            <div className="flex items-center justify-center space-x-4">
+            <div className="mb-4 px-2">
+            <div className="flex items-center justify-center space-x-2 sm:space-x-4">
               <div className={`flex items-center ${currentStep >= 1 ? 'text-secondary-var' : 'text-accent'}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium ${
                   currentStep >= 1 ? 'bg-secondary-var text-white' : 'bg-accent/20 text-accent'
                 }`}>
                   1
                 </div>
-                <span className="ml-2 text-sm font-medium">Basic Info</span>
+                <span className="ml-1 sm:ml-2 text-xs sm:text-sm font-medium hidden sm:inline">Basic Info</span>
               </div>
               
-              <div className={`w-8 h-1 ${currentStep >= 2 ? 'bg-secondary-var' : 'bg-accent/20'}`}></div>
+              <div className={`w-4 sm:w-8 h-1 ${currentStep >= 2 ? 'bg-secondary-var' : 'bg-accent/20'}`}></div>
               
               <div className={`flex items-center ${currentStep >= 2 ? 'text-secondary-var' : 'text-accent'}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium ${
                   currentStep >= 2 ? 'bg-secondary-var text-white' : 'bg-accent/20 text-accent'
                 }`}>
                   2
                 </div>
-                <span className="ml-2 text-sm font-medium">Image & Details</span>
+                <span className="ml-1 sm:ml-2 text-xs sm:text-sm font-medium hidden sm:inline">Image & Details</span>
               </div>
             </div>
           </div>
 
           {/* Form */}
           <div className="bg-white rounded-xl shadow-lg border border-accent/20 overflow-hidden">
-            <div className="bg-gradient-to-r from-accent/10 to-accent/5 border-b border-accent/30 px-6 py-4">
-              <h2 className="text-xl font-semibold text-gray-900">
+            <div className="bg-gradient-to-r from-accent/10 to-accent/5 border-b border-accent/30 px-4 sm:px-6 py-3 sm:py-4">
+              <h2 className="text-base sm:text-lg lg:text-xl font-semibold text-gray-900">
                 {currentStep === 1 ? 'Basic Information' : 'Pricing & Settings'}
               </h2>
             </div>
 
-            <div className="p-4 bg-gradient-to-br from-white to-accent/5">
-              <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="p-3 sm:p-4 lg:p-6 bg-gradient-to-br from-white to-accent/5">
+              <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                 {currentStep === 1 ? (
                   /* Step 1: Basic Information */
                   <div className="space-y-4">
@@ -364,10 +365,10 @@ const AddProductPage: React.FC = () => {
                       <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">
                         Product Image
                       </label>
-                      <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-accent transition-colors">
+                      <div className="mt-1 flex justify-center px-3 sm:px-6 pt-4 sm:pt-5 pb-4 sm:pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-accent transition-colors">
                         <div className="space-y-1 text-center">
-                          <PhotoIcon className="mx-auto h-12 w-12 text-gray-400" />
-                          <div className="flex text-sm text-gray-600">
+                          <PhotoIcon className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400" />
+                          <div className="flex flex-col sm:flex-row text-xs sm:text-sm text-gray-600 items-center gap-1 sm:gap-0">
                             <label htmlFor="image" className="relative cursor-pointer bg-white rounded-md font-medium text-secondary hover:text-secondary/80 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-secondary">
                               <span>Upload a file</span>
                               <input
@@ -379,13 +380,13 @@ const AddProductPage: React.FC = () => {
                                 accept="image/*"
                               />
                             </label>
-                            <p className="pl-1">or drag and drop</p>
+                            <p className="sm:pl-1 hidden sm:inline">or drag and drop</p>
                           </div>
                           <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
                         </div>
                       </div>
                       {formData.image && (
-                        <p className="mt-2 text-sm text-gray-600">
+                        <p className="mt-2 text-xs sm:text-sm text-gray-600 truncate">
                           Selected: {formData.image.name}
                         </p>
                       )}
@@ -408,17 +409,18 @@ const AddProductPage: React.FC = () => {
                 )}
 
                 {/* Form Actions */}
-                <div className="flex justify-between pt-4">
+                <div className="flex justify-between pt-3 sm:pt-4 gap-2 sm:gap-0">
                   {currentStep === 1 ? (
                     <div></div>
                   ) : (
                     <button
                       type="button"
                       onClick={prevStep}
-                      className="inline-flex items-center px-4 py-2 border border-accent/40 rounded-lg text-sm font-medium text-gray-700 hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary transition-colors duration-200"
+                      className="inline-flex items-center px-3 sm:px-4 py-2 border border-accent/40 rounded-lg text-xs sm:text-sm font-medium text-gray-700 hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary transition-colors duration-200"
                     >
-                      <ChevronLeftIcon className="w-4 h-4 mr-2" />
-                      Previous
+                      <ChevronLeftIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                      <span className="hidden sm:inline">Previous</span>
+                      <span className="sm:hidden">Prev</span>
                     </button>
                   )}
                   
@@ -426,23 +428,29 @@ const AddProductPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={nextStep}
-                      className="inline-flex items-center px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="inline-flex items-center px-4 sm:px-6 py-2 border border-transparent rounded-lg shadow-sm text-xs sm:text-sm font-medium text-white transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{ backgroundColor: 'var(--color-secondary)' }}
                     >
-                      Next
-                      <ChevronRightIcon className="w-4 h-4 ml-2" />
+                      <span className="hidden sm:inline">Next</span>
+                      <span className="sm:hidden">Next</span>
+                      <ChevronRightIcon className="w-3 h-3 sm:w-4 sm:h-4 sm:ml-2 ml-1" />
                     </button>
                   ) : (
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="inline-flex items-center px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="inline-flex items-center px-4 sm:px-6 py-2 border border-transparent rounded-lg shadow-sm text-xs sm:text-sm font-medium text-white transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{ backgroundColor: '#a16207' }}
                     >
                       {submitting ? (
-                        'Creating Product...'
+                        <span className="hidden sm:inline">Creating Product...</span>
                       ) : (
-                        'Create Product'
+                        <span className="hidden sm:inline">Create Product</span>
+                      )}
+                      {submitting ? (
+                        <span className="sm:hidden">Creating...</span>
+                      ) : (
+                        <span className="sm:hidden">Create</span>
                       )}
                     </button>
                   )}

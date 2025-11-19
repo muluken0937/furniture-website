@@ -89,18 +89,18 @@ const ProductsPage: React.FC = () => {
   return (
     <ProtectedRoute requiredRole="staff">
       <AdminLayout>
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Header with Add Product Button */}
-          <div className="flex justify-between items-center bg-white p-6 rounded-lg shadow-sm border border-accent/20">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-accent/20">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Products</h1>
-              <p className="mt-2 text-gray-600">Manage your furniture products</p>
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Products</h1>
+              <p className="mt-1 sm:mt-2 text-sm sm:text-base text-gray-600">Manage your furniture products</p>
             </div>
               <button 
               onClick={() => router.push('/admin/products/add')}
-              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white transition-all duration-200 shadow-lg hover:shadow-xl bg-secondary-var"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2 sm:py-3 border border-transparent text-sm sm:text-base font-medium rounded-lg text-white transition-all duration-200 shadow-lg hover:shadow-xl bg-secondary-var"
             >
-              <PlusIcon className="w-5 h-5 mr-2" />
+              <PlusIcon className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
               Add Product
             </button>
           </div>
@@ -111,42 +111,52 @@ const ProductsPage: React.FC = () => {
               <ul className="divide-y divide-gray-200">
                 {products.map((product) => (
                   <li key={product.id}>
-                    <div className="px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors duration-200">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 h-16 w-16">
+                    <div className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 hover:bg-gray-50 transition-colors duration-200">
+                      <div className="flex items-start sm:items-center w-full sm:w-auto min-w-0">
+                        <div className="flex-shrink-0 h-12 w-12 sm:h-16 sm:w-16">
                           {product.image ? (
                             <img 
                               src={product.image} 
                               alt={product.name}
-                              className="h-16 w-16 rounded-lg object-cover"
+                              className="h-12 w-12 sm:h-16 sm:w-16 rounded-lg object-cover"
                             />
                           ) : (
-                            <div className="h-16 w-16 rounded-lg bg-accent/20 flex items-center justify-center">
+                            <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-lg bg-accent/20 flex items-center justify-center">
                               <span className="text-accent text-xs">No Image</span>
                             </div>
                           )}
                         </div>
-                        <div className="ml-4">
-                          <div className="flex items-center">
-                            <h3 className="text-lg font-medium text-gray-900">
+                        <div className="ml-3 sm:ml-4 min-w-0 flex-1">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0">
+                            <h3 className="text-base sm:text-lg font-medium text-gray-900 truncate">
                               {product.name}
                             </h3>
-                            <span className={`ml-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            <span className={`sm:ml-3 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium w-fit ${
                               product.is_active ? 'bg-success/20 text-success' : 'bg-red-100 text-red-800'
                             }`}>
                             {product.is_active ? 'Active' : 'Inactive'}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-500 mt-1">{product.description}</p>
-                          <p className="text-sm text-gray-500">
-                            Category: {product.category.name} | Price: ${product.price} | Stock: {product.stock}
-                          </p>
+                          <p className="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-2">{product.description}</p>
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mt-1">
+                            <p className="text-xs sm:text-sm text-gray-500">
+                              <span className="font-medium">Category:</span> {product.category.name}
+                            </p>
+                            <span className="hidden sm:inline text-gray-400">|</span>
+                            <p className="text-xs sm:text-sm text-gray-500">
+                              <span className="font-medium">Price:</span> ${product.price}
+                            </p>
+                            <span className="hidden sm:inline text-gray-400">|</span>
+                            <p className="text-xs sm:text-sm text-gray-500">
+                              <span className="font-medium">Stock:</span> {product.stock}
+                            </p>
+                          </div>
                           {product.sku && (
                             <p className="text-xs text-accent mt-1">SKU: {product.sku}</p>
                           )}
                         </div>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 self-end sm:self-auto">
                         <button 
                           onClick={() => handleEdit(product)}
                           className="p-2 text-accent hover:text-secondary hover:bg-secondary/10 rounded-lg transition-all duration-200"
@@ -169,22 +179,22 @@ const ProductsPage: React.FC = () => {
             </div>
           ) : (
             /* Empty State */
-            <div className="text-center py-16 bg-white rounded-lg shadow-sm border border-accent/20">
-              <div className="mx-auto h-24 w-24 text-accent mb-6">
+            <div className="text-center py-8 sm:py-12 lg:py-16 bg-white rounded-lg shadow-sm border border-accent/20 px-4">
+              <div className="mx-auto h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 text-accent mb-4 sm:mb-6">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-full h-full">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
-              <p className="text-gray-600 mb-8 max-w-md mx-auto">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">No products found</h3>
+              <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 max-w-md mx-auto">
                 Get started by creating your first furniture product. Add products to build your catalog and start selling.
               </p>
               <button
                 onClick={() => router.push('/admin/products/add')}
-                className="inline-flex items-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-white transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="inline-flex items-center px-6 sm:px-8 py-3 sm:py-4 border border-transparent text-sm sm:text-base lg:text-lg font-medium rounded-lg text-white transition-all duration-200 shadow-lg hover:shadow-xl"
                 style={{ backgroundColor: '#a16207' }}
               >
-                <PlusIcon className="w-6 h-6 mr-3" />
+                <PlusIcon className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3" />
                 Add Your First Product
               </button>
             </div>

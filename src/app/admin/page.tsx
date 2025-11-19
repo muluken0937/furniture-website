@@ -99,10 +99,10 @@ const AdminDashboard: React.FC = () => {
   return (
     <ProtectedRoute requiredRole="staff">
       <AdminLayout>
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
           <div>
-            <h1 className="text-2xl font-bold" style={{ color: 'var(--color-primary)' }}>Dashboard</h1>
-            <p className="mt-1 text-sm" style={{ color: 'var(--color-accent)' }}>
+            <h1 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--color-primary)' }}>Dashboard</h1>
+            <p className="mt-1 text-xs sm:text-sm" style={{ color: 'var(--color-accent)' }}>
               Overview of your furniture store
             </p>
           </div>
@@ -110,22 +110,22 @@ const AdminDashboard: React.FC = () => {
           {/* API Switcher */}
           <ApiSwitcher />
 
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {statCards.map((stat) => (
               <div key={stat.name} className="bg-white overflow-hidden shadow rounded-lg" style={{ border: '1px solid var(--color-accent)' }}>
-                <div className="p-5">
+                <div className="p-3 sm:p-4 lg:p-5">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <div className="p-3 rounded-md" style={{ backgroundColor: stat.bgColor }}>
-                        <stat.icon className="w-6 h-6" style={{ color: stat.textColor }} />
+                      <div className="p-2 sm:p-3 rounded-md" style={{ backgroundColor: stat.bgColor }}>
+                        <stat.icon className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: stat.textColor }} />
                       </div>
                     </div>
-                    <div className="ml-5 w-0 flex-1">
+                    <div className="ml-3 sm:ml-5 w-0 flex-1 min-w-0">
                       <dl>
-                        <dt className="text-sm font-medium truncate" style={{ color: 'var(--color-accent)' }}>
+                        <dt className="text-xs sm:text-sm font-medium truncate" style={{ color: 'var(--color-accent)' }}>
                           {stat.name}
                         </dt>
-                        <dd className="text-lg font-medium" style={{ color: 'var(--color-primary)' }}>
+                        <dd className="text-base sm:text-lg font-medium truncate" style={{ color: 'var(--color-primary)' }}>
                           {stat.value}
                         </dd>
                       </dl>
@@ -137,13 +137,13 @@ const AdminDashboard: React.FC = () => {
           </div>
 
           <div className="bg-white shadow rounded-lg" style={{ border: '1px solid #94a3b8' }}>
-            <div className="px-4 py-5 sm:p-6">
-              <h3 className="text-lg leading-6 font-medium" style={{ color: 'var(--color-primary)' }}>
+            <div className="px-3 py-4 sm:px-4 sm:py-5 lg:px-6 lg:py-6">
+              <h3 className="text-base sm:text-lg leading-6 font-medium" style={{ color: 'var(--color-primary)' }}>
                 Quick Actions
               </h3>
-              <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="mt-4 sm:mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
                 <button 
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors"
+                  className="inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md text-white transition-colors"
                   style={{ backgroundColor: 'var(--color-primary)' }}
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-primary)'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-primary)'}
@@ -151,7 +151,7 @@ const AdminDashboard: React.FC = () => {
                   Add Product
                 </button>
                 <button 
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors"
+                  className="inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md text-white transition-colors"
                   style={{ backgroundColor: 'var(--color-success)' }}
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-success)'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-success)'}
@@ -159,7 +159,7 @@ const AdminDashboard: React.FC = () => {
                   Add Category
                 </button>
                 <button 
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors"
+                  className="inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md text-white transition-colors"
                   style={{ backgroundColor: 'var(--color-warning)' }}
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-warning)'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-warning)'}
@@ -167,7 +167,7 @@ const AdminDashboard: React.FC = () => {
                   View Orders
                 </button>
                 <button 
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white transition-colors"
+                  className="inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md text-white transition-colors"
                   style={{ backgroundColor: 'var(--color-secondary)' }}
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-secondary)'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-secondary)'}
