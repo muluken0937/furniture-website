@@ -55,12 +55,20 @@ const AddCategoryPage: React.FC = () => {
       return;
     }
 
+    // Check if token exists
+    if (!token) {
+      setFormErrors({ name: 'Authentication required. Please log in again.' });
+      return;
+    }
+
     setSubmitting(true);
 
     try {
+      const headers = getApiHeaders(token);
+      
       const response = await fetch(`${apiUrl}/api/categories/`, {
         method: 'POST',
-        headers: getApiHeaders(token),
+        headers: headers,
         body: JSON.stringify({
           name: formData.name.trim(),
           description: formData.description.trim() || '',
@@ -72,7 +80,13 @@ const AddCategoryPage: React.FC = () => {
       } else {
         const errorData = await response.json();
         console.error('Error saving category:', errorData);
-        setFormErrors({ name: extractErrorMessage(errorData, 'Failed to create category. Please try again.') });
+        
+        // Handle authentication errors
+        if (response.status === 401 || response.status === 403) {
+          setFormErrors({ name: 'Authentication failed. Please log in again.' });
+        } else {
+          setFormErrors({ name: extractErrorMessage(errorData, 'Failed to create category. Please try again.') });
+        }
       }
     } catch (error) {
       console.error('Error saving category:', error);
