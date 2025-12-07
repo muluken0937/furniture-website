@@ -6,6 +6,13 @@ import { getApiUrl } from '@/config/api';
 import AdminLayout from '@/components/admin/AdminLayout';
 import ProtectedRoute from '@/components/admin/ProtectedRoute';
 import { ArrowLeftIcon, PhotoIcon, ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';
+import {
+  PRODUCT_MATERIALS,
+  PRODUCT_STYLES,
+  PRODUCT_COLORS,
+  PRODUCT_FINISHES,
+  ROOM_TYPES,
+} from '@/constants/productConstants';
 
 interface Category {
   id: number;
@@ -22,6 +29,11 @@ interface ProductFormData {
   category: number;
   is_active: boolean;
   image?: File;
+  material: string;
+  style: string;
+  color: string;
+  finish: string;
+  roomType: string;
 }
 
 const AddProductPage: React.FC = () => {
@@ -38,6 +50,11 @@ const AddProductPage: React.FC = () => {
     sku: '',
     category: 0,
     is_active: true,
+    material: '',
+    style: '',
+    color: '',
+    finish: '',
+    roomType: '',
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -46,12 +63,43 @@ const AddProductPage: React.FC = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
+      if (!apiUrl) {
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+
       try {
-        const response = await fetch(`${apiUrl}/api/categories/`);
+        const response = await fetch(`${apiUrl}/api/categories/`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          console.error('Failed to fetch categories:', response.status, response.statusText);
+          setCategories([]);
+          return;
+        }
+
         const data = await response.json();
-        setCategories(data.results || data);
+        
+        // Handle different response formats
+        let categoriesList = [];
+        if (Array.isArray(data)) {
+          categoriesList = data;
+        } else if (data.results && Array.isArray(data.results)) {
+          categoriesList = data.results;
+        } else if (data.results) {
+          categoriesList = [data.results];
+        }
+        
+        setCategories(categoriesList);
       } catch (error) {
         console.error('Error fetching categories:', error);
+        setCategories([]);
       } finally {
         setLoading(false);
       }
@@ -179,6 +227,7 @@ const AddProductPage: React.FC = () => {
     }
   };
 
+
   if (loading) {
     return (
       <ProtectedRoute requiredRole="staff">
@@ -271,22 +320,6 @@ const AddProductPage: React.FC = () => {
                       {formErrors.name && <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>}
                     </div>
 
-                    {/* Description */}
-                    <div>
-                      <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                        Description *
-                      </label>
-                      <textarea
-                        id="description"
-                        value={formData.description}
-                        onChange={(e) => handleInputChange('description', e.target.value)}
-                        rows={4}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
-                        placeholder="Enter product description"
-                      />
-                      {formErrors.description && <p className="text-red-500 text-sm mt-1">{formErrors.description}</p>}
-                    </div>
-
                     {/* Category */}
                     <div>
                       <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
@@ -296,9 +329,16 @@ const AddProductPage: React.FC = () => {
                         id="category"
                         value={formData.category}
                         onChange={(e) => handleInputChange('category', parseInt(e.target.value))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
+                        disabled={loading}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
                       >
-                        <option value="">Select a category</option>
+                        <option value="">
+                          {loading 
+                            ? 'Loading categories...' 
+                            : categories.length === 0 
+                            ? 'No categories available'
+                            : 'Select a category'}
+                        </option>
                         {categories.map((category) => (
                           <option key={category.id} value={category.id}>
                             {category.name}
@@ -306,6 +346,109 @@ const AddProductPage: React.FC = () => {
                         ))}
                       </select>
                       {formErrors.category && <p className="text-red-500 text-sm mt-1">{formErrors.category}</p>}
+                    </div>
+
+                    {/* Product Attributes Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-2 border-t border-gray-200">
+                      {/* Material */}
+                      <div>
+                        <label htmlFor="material" className="block text-sm font-medium text-gray-700 mb-1">
+                          Material
+                        </label>
+                        <select
+                          id="material"
+                          value={formData.material}
+                          onChange={(e) => handleInputChange('material', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent text-sm"
+                        >
+                          <option value="">Select material</option>
+                          {PRODUCT_MATERIALS.map((material) => (
+                            <option key={material} value={material}>
+                              {material}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Style */}
+                      <div>
+                        <label htmlFor="style" className="block text-sm font-medium text-gray-700 mb-1">
+                          Style
+                        </label>
+                        <select
+                          id="style"
+                          value={formData.style}
+                          onChange={(e) => handleInputChange('style', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent text-sm"
+                        >
+                          <option value="">Select style</option>
+                          {PRODUCT_STYLES.map((style) => (
+                            <option key={style} value={style}>
+                              {style}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Color */}
+                      <div>
+                        <label htmlFor="color" className="block text-sm font-medium text-gray-700 mb-1">
+                          Color
+                        </label>
+                        <select
+                          id="color"
+                          value={formData.color}
+                          onChange={(e) => handleInputChange('color', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent text-sm"
+                        >
+                          <option value="">Select color</option>
+                          {PRODUCT_COLORS.map((color) => (
+                            <option key={color} value={color}>
+                              {color}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Finish */}
+                      <div>
+                        <label htmlFor="finish" className="block text-sm font-medium text-gray-700 mb-1">
+                          Finish
+                        </label>
+                        <select
+                          id="finish"
+                          value={formData.finish}
+                          onChange={(e) => handleInputChange('finish', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent text-sm"
+                        >
+                          <option value="">Select finish</option>
+                          {PRODUCT_FINISHES.map((finish) => (
+                            <option key={finish} value={finish}>
+                              {finish}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Room Type */}
+                      <div>
+                        <label htmlFor="roomType" className="block text-sm font-medium text-gray-700 mb-1">
+                          Room Type
+                        </label>
+                        <select
+                          id="roomType"
+                          value={formData.roomType}
+                          onChange={(e) => handleInputChange('roomType', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent text-sm"
+                        >
+                          <option value="">Select room type</option>
+                          {ROOM_TYPES.map((room) => (
+                            <option key={room} value={room}>
+                              {room}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
 
                     {/* Price */}
@@ -324,6 +467,69 @@ const AddProductPage: React.FC = () => {
                         placeholder="0.00"
                       />
                       {formErrors.price && <p className="text-red-500 text-sm mt-1">{formErrors.price}</p>}
+                    </div>
+
+                    {/* Description */}
+                    <div className="pt-2 border-t border-gray-200">
+                      <div className="flex items-center justify-between mb-2">
+                        <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                          Description *
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const parts = [];
+                            
+                            // Add product name
+                            if (formData.name.trim()) {
+                              parts.push(`Product Name: ${formData.name}`);
+                            }
+                            
+                            // Add category
+                            const selectedCategory = categories.find(cat => cat.id === formData.category);
+                            if (selectedCategory) {
+                              parts.push(`Category: ${selectedCategory.name}`);
+                            }
+                            
+                            // Add attributes
+                            const attributes = [];
+                            if (formData.material) attributes.push(`Material: ${formData.material}`);
+                            if (formData.style) attributes.push(`Style: ${formData.style}`);
+                            if (formData.color) attributes.push(`Color: ${formData.color}`);
+                            if (formData.finish) attributes.push(`Finish: ${formData.finish}`);
+                            if (formData.roomType) attributes.push(`Room Type: ${formData.roomType}`);
+                            
+                            if (attributes.length > 0) {
+                              parts.push('Product Attributes:\n' + attributes.join('\n'));
+                            }
+                            
+                            if (parts.length > 0) {
+                              const textToAdd = formData.description.trim() 
+                                ? '\n\n' + parts.join('\n')
+                                : parts.join('\n');
+                              setFormData(prev => ({
+                                ...prev,
+                                description: prev.description + textToAdd
+                              }));
+                            }
+                          }}
+                          disabled={!formData.name.trim() && !formData.category && !formData.material && !formData.style && !formData.color && !formData.finish && !formData.roomType}
+                          className="text-xs px-3 py-1 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                          style={{ backgroundColor: '#a16207' }}
+                          title="Add product name, category, and attributes to description"
+                        >
+                          Add to Description
+                        </button>
+                      </div>
+                      <textarea
+                        id="description"
+                        value={formData.description}
+                        onChange={(e) => handleInputChange('description', e.target.value)}
+                        rows={4}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
+                        placeholder="Enter product description"
+                      />
+                      {formErrors.description && <p className="text-red-500 text-sm mt-1">{formErrors.description}</p>}
                     </div>
                   </div>
                 ) : (
