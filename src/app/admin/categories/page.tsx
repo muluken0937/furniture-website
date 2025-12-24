@@ -40,7 +40,6 @@ const CategoriesPage: React.FC = () => {
       const data = await response.json();
       setCategories(parseApiResponse<Category>(data));
     } catch (err: any) {
-      console.error('Error fetching categories:', err);
       setError(err.message || 'Failed to load categories');
     } finally {
       setLoading(false);
@@ -65,7 +64,6 @@ const CategoriesPage: React.FC = () => {
         alert(`Error deleting category: ${extractErrorMessage(errorData, 'Unknown error')}`);
       }
     } catch (error) {
-      console.error('Error deleting category:', error);
       alert('Failed to delete category. Please try again.');
     }
   };

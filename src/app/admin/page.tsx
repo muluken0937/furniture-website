@@ -54,7 +54,7 @@ const AdminDashboard: React.FC = () => {
         totalRevenue: 0,
       });
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
+      // Error handled silently - stats will remain at default values
     }
   };
 

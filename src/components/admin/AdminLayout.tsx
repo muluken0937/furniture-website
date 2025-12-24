@@ -145,7 +145,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       <main 
         className="p-3 sm:p-4 lg:p-6 lg:ml-64" 
         style={{ 
-          marginTop: 'calc(112px + 48px)', // Height of header + admin panel banner
+          marginTop: 'calc(112px - 60px)', // Height of header + admin panel banner
           minHeight: 'calc(100vh - 160px)',
           position: 'relative',
           zIndex: 1 // Lower z-index than fixed elements

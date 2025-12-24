@@ -47,7 +47,6 @@ const EditCategoryPage: React.FC = () => {
         setFormErrors({ name: 'Category not found' });
       }
     } catch (error) {
-      console.error('Error fetching category:', error);
       setFormErrors({ name: 'Failed to load category' });
     } finally {
       setLoading(false);
@@ -94,11 +93,9 @@ const EditCategoryPage: React.FC = () => {
         router.push('/admin/categories');
       } else {
         const errorData = await response.json();
-        console.error('Error updating category:', errorData);
         setFormErrors({ name: extractErrorMessage(errorData, 'Failed to update category. Please try again.') });
       }
     } catch (error) {
-      console.error('Error updating category:', error);
       setFormErrors({ name: 'Network error. Please check your connection and try again.' });
     } finally {
       setSubmitting(false);

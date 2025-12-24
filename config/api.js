@@ -25,10 +25,7 @@ export const getApiUrl = () => {
   const fromEnvProd = sanitizeBaseUrl(ENV_URL_PROD);
   if (fromEnvProd) return fromEnvProd;
 
-  // As a last resort in dev, attempt localhost
-  if (process.env.NODE_ENV !== "production") return "http://localhost:8000";
-
-  return ""; // Explicitly empty in production if not configured
+  return ""; // Return empty if no environment variable is configured
 };
 
 export const getApiName = () => (process.env.NODE_ENV === "production" ? "Configured API" : "Local/Configured API");

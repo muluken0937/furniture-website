@@ -79,7 +79,6 @@ const AddCategoryPage: React.FC = () => {
         router.push('/admin/categories');
       } else {
         const errorData = await response.json();
-        console.error('Error saving category:', errorData);
         
         // Handle authentication errors
         if (response.status === 401 || response.status === 403) {
@@ -89,7 +88,6 @@ const AddCategoryPage: React.FC = () => {
         }
       }
     } catch (error) {
-      console.error('Error saving category:', error);
       setFormErrors({ name: 'Network error. Please check your connection and try again.' });
     } finally {
       setSubmitting(false);

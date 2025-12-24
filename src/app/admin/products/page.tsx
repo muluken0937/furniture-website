@@ -5,7 +5,16 @@ import { useRouter } from 'next/navigation';
 import { getApiUrl } from '@/config/api';
 import AdminLayout from '@/components/admin/AdminLayout';
 import ProtectedRoute from '@/components/admin/ProtectedRoute';
+import { useAuth } from '@/contexts/AuthContext';
+import { getApiHeaders, extractErrorMessage, handleTokenExpiration } from '@/utils/apiHelpers';
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import toast from 'react-hot-toast';
+
+interface ProductImage {
+  id: number;
+  image: string;
+  order: number;
+}
 
 interface Product {
   id: number;
@@ -19,15 +28,18 @@ interface Product {
     name: string;
   };
   is_active: boolean;
-  image?: string;
+  image?: string; // Legacy single image field
+  images?: ProductImage[]; // Multiple images array
   created_at: string;
   updated_at: string;
 }
 
 const ProductsPage: React.FC = () => {
   const router = useRouter();
+  const { token } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const apiUrl = getApiUrl();
 
@@ -39,34 +51,132 @@ const ProductsPage: React.FC = () => {
   }, []);
 
   const fetchProducts = async () => {
+    if (!apiUrl) {
+      setError('API URL is not configured. Please check your environment variables.');
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch(`${apiUrl}/api/products/`);
-      const data = await response.json();
-      setProducts(data.results || data);
+      const headers = getApiHeaders(token) as Record<string, string>;
+      const response = await fetch(`${apiUrl}/api/products/`, {
+        method: 'GET',
+        headers: headers,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setProducts(data.results || data);
+        setError(null);
+      } else {
+        // Handle token expiration
+        if (handleTokenExpiration(response)) {
+          return;
+        }
+        
+        // Handle authentication errors
+        if (response.status === 401 || response.status === 403) {
+          const errorMsg = 'Authentication failed. Please log in again.';
+          setError(errorMsg);
+          toast.error(errorMsg);
+        } else {
+          const errorData = await response.json().catch(() => ({}));
+          const errorMessage = extractErrorMessage(errorData, 'Failed to fetch products. Please try again.');
+          setError(errorMessage);
+          toast.error(errorMessage);
+        }
+      }
     } catch (error) {
-      console.error('Error fetching products:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Network error. Please check your connection and try again.';
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (productId: number) => {
-    if (!confirm('Are you sure you want to delete this product?')) {
+    // Use a custom confirmation dialog
+    const confirmed = window.confirm('Are you sure you want to delete this product?');
+    if (!confirmed) {
       return;
     }
 
+    // Check if API URL is configured
+    if (!apiUrl) {
+      toast.error('API URL is not configured. Please check your environment variables.');
+      return;
+    }
+
+    // Check if token exists
+    if (!token) {
+      toast.error('Authentication required. Please log in again.');
+      return;
+    }
+
+    const deleteToast = toast.loading('Deleting product...');
+
     try {
+      const headers = getApiHeaders(token) as Record<string, string>;
       const response = await fetch(`${apiUrl}/api/products/${productId}/`, {
         method: 'DELETE',
+        headers: headers,
       });
 
-      if (response.ok) {
+      // Handle token expiration
+      if (handleTokenExpiration(response)) {
+        toast.dismiss(deleteToast);
+        return;
+      }
+
+      // Handle successful deletion (204 No Content or 200 OK)
+      if (response.ok || response.status === 204) {
+        toast.success('Product deleted successfully!', { id: deleteToast });
         await fetchProducts();
       } else {
-        console.error('Error deleting product');
+        // Try to parse error response
+        let errorMessage = 'Failed to delete product. Please try again.';
+        
+        // Only try to read response body if there's content
+        const contentType = response.headers.get('content-type');
+        const contentLength = response.headers.get('content-length');
+        
+        if (contentType && contentType.includes('application/json') && contentLength !== '0') {
+          try {
+            const errorData = await response.json();
+            errorMessage = extractErrorMessage(errorData, errorMessage);
+          } catch (parseError) {
+            // If JSON parsing fails, use status text
+            errorMessage = `Server error: ${response.status} ${response.statusText}`;
+          }
+        } else if (contentLength && contentLength !== '0') {
+          // Try to read as text if not JSON
+          try {
+            const text = await response.text();
+            errorMessage = text || `Server error: ${response.status} ${response.statusText}`;
+          } catch (textError) {
+            errorMessage = `Server error: ${response.status} ${response.statusText}`;
+          }
+        } else {
+          // Empty response, use status code
+          errorMessage = `Server error: ${response.status} ${response.statusText}`;
+        }
+
+        // Handle authentication errors
+        if (response.status === 401 || response.status === 403) {
+          toast.error('Authentication failed. Please log in again.', { id: deleteToast });
+        } else {
+          toast.error(errorMessage, { id: deleteToast });
+        }
       }
     } catch (error) {
-      console.error('Error deleting product:', error);
+      // Handle network errors or connection issues
+      if (error instanceof TypeError && error.message === 'Failed to fetch') {
+        toast.error('Network error. Please check your connection and try again.', { id: deleteToast });
+      } else {
+        const errorMessage = error instanceof Error ? error.message : 'Network error. Please check your connection and try again.';
+        toast.error(errorMessage, { id: deleteToast });
+      }
     }
   };
 
@@ -105,6 +215,13 @@ const ProductsPage: React.FC = () => {
             </button>
           </div>
 
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-md p-4">
+              <p className="text-sm text-red-800">{error}</p>
+            </div>
+          )}
+
           {/* Products List */}
           {products.length > 0 ? (
             <div className="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -113,18 +230,50 @@ const ProductsPage: React.FC = () => {
                   <li key={product.id}>
                     <div className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 hover:bg-gray-50 transition-colors duration-200">
                       <div className="flex items-start sm:items-center w-full sm:w-auto min-w-0">
-                        <div className="flex-shrink-0 h-12 w-12 sm:h-16 sm:w-16">
-                          {product.image ? (
-                            <img 
-                              src={product.image} 
-                              alt={product.name}
-                              className="h-12 w-12 sm:h-16 sm:w-16 rounded-lg object-cover"
-                            />
-                          ) : (
-                            <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-lg bg-accent/20 flex items-center justify-center">
-                              <span className="text-accent text-xs">No Image</span>
-                            </div>
-                          )}
+                        <div className="flex-shrink-0 h-12 w-12 sm:h-16 sm:w-16 relative">
+                          {(() => {
+                            // Get the first image from images array or fallback to legacy image field
+                            const firstImage = product.images && product.images.length > 0 
+                              ? product.images[0].image 
+                              : product.image;
+                            
+                            if (firstImage) {
+                              const imageUrl = firstImage.startsWith('http') ? firstImage : `${apiUrl}${firstImage}`;
+                              const imageCount = product.images?.length || (product.image ? 1 : 0);
+                              
+                              return (
+                                <>
+                                  <img 
+                                    src={imageUrl}
+                                    alt={product.name}
+                                    className="h-12 w-12 sm:h-16 sm:w-16 rounded-lg object-cover"
+                                    onError={(e) => {
+                                      // Fallback if image fails to load - replace with placeholder
+                                      const target = e.target as HTMLImageElement;
+                                      target.style.display = 'none';
+                                      const placeholder = document.createElement('div');
+                                      placeholder.className = 'h-12 w-12 sm:h-16 sm:w-16 rounded-lg bg-accent/20 flex items-center justify-center';
+                                      placeholder.innerHTML = '<span class="text-accent text-xs">No Image</span>';
+                                      if (target.parentElement) {
+                                        target.parentElement.appendChild(placeholder);
+                                      }
+                                    }}
+                                  />
+                                  {imageCount > 1 && (
+                                    <div className="absolute -top-1 -right-1 bg-secondary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
+                                      {imageCount}
+                                    </div>
+                                  )}
+                                </>
+                              );
+                            } else {
+                              return (
+                                <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-lg bg-accent/20 flex items-center justify-center">
+                                  <span className="text-accent text-xs">No Image</span>
+                                </div>
+                              );
+                            }
+                          })()}
                         </div>
                         <div className="ml-3 sm:ml-4 min-w-0 flex-1">
                           <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0">
