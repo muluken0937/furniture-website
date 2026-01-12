@@ -65,8 +65,14 @@ const ProductsPage: React.FC = () => {
       });
 
       if (response.ok) {
-      const data = await response.json();
-      setProducts(data.results || data);
+        const data = await response.json();
+        const productsList = data.results || data;
+        const sortedProducts = Array.isArray(productsList) 
+          ? [...productsList].sort((a, b) => 
+              new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
+            )
+          : productsList;
+        setProducts(sortedProducts);
         setError(null);
       } else {
         // Handle token expiration

@@ -142,6 +142,11 @@ const AddProductPage: React.FC = () => {
       errors.stock = 'Stock cannot be negative';
     }
 
+    // Require at least one image
+    if (formData.images.length === 0) {
+      errors.images = 'Please upload at least one product image';
+    }
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -149,8 +154,9 @@ const AddProductPage: React.FC = () => {
   const nextStep = () => {
     if (currentStep === 1) {
       if (validateStep1()) {
-      setCurrentStep(2);
-      setFormErrors({});
+        setCurrentStep(2);
+        setFormErrors({});
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
       }
     }
   };
@@ -159,6 +165,7 @@ const AddProductPage: React.FC = () => {
     if (currentStep === 2) {
       setCurrentStep(1);
       setFormErrors({});
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
     }
   };
 
@@ -173,17 +180,13 @@ const AddProductPage: React.FC = () => {
       return;
     }
 
-    // Step 2 - validate before submitting
     if (!validateStep2()) {
+      const firstErrorField = Object.keys(formErrors)[0];
+      if (firstErrorField) {
+        const errorElement = document.querySelector(`[name="${firstErrorField}"], #${firstErrorField}`);
+        errorElement?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return;
-    }
-
-    // Warn if no images are selected (but allow submission)
-    if (formData.images.length === 0) {
-      toast('No images selected. Product will be created without images.', {
-        icon: '⚠️',
-        duration: 4000,
-      });
     }
 
     // Check if API URL is configured
@@ -469,11 +472,14 @@ const AddProductPage: React.FC = () => {
               <form 
                 onSubmit={handleSubmit} 
                 onKeyDown={(e) => {
-                  // Prevent form submission on Enter key when on step 1
-                  if (currentStep === 1 && e.key === 'Enter' && (e.target as HTMLElement).tagName !== 'TEXTAREA') {
-                    e.preventDefault();
-                    if (validateStep1()) {
-                      nextStep();
+                  if (e.key === 'Enter') {
+                    const target = e.target as HTMLElement;
+                    const inputTarget = e.target as HTMLInputElement | HTMLButtonElement;
+                    if (target.tagName !== 'TEXTAREA' && inputTarget.type !== 'submit' && inputTarget.type !== 'button') {
+                      e.preventDefault();
+                      if (currentStep === 1 && validateStep1()) {
+                        nextStep();
+                      }
                     }
                   }
                 }}
@@ -485,6 +491,9 @@ const AddProductPage: React.FC = () => {
                     <p className="text-sm text-red-800">{formErrors._general}</p>
                   </div>
                 )}
+                {/* Step content with smooth transitions - container maintains height */}
+                <div className="relative w-full" style={{ minHeight: '650px' }}>
+                  <div className={`w-full transition-opacity duration-300 ease-in-out ${currentStep === 1 ? 'opacity-100' : 'opacity-0 absolute top-0 left-0 pointer-events-none'}`}>
                 {currentStep === 1 ? (
                   /* Step 1: Basic Information */
                   <div className="space-y-4">
@@ -727,7 +736,10 @@ const AddProductPage: React.FC = () => {
                       {formErrors.description && <p className="text-red-500 text-sm mt-1">{formErrors.description}</p>}
                     </div>
                   </div>
-                ) : (
+                ) : null}
+                  </div>
+                  <div className={`w-full transition-opacity duration-300 ease-in-out ${currentStep === 2 ? 'opacity-100' : 'opacity-0 absolute top-0 left-0 pointer-events-none'}`}>
+                {currentStep === 2 ? (
                   /* Step 2: Additional Details */
                   <div className="space-y-4">
                     {/* Stock */}
@@ -757,86 +769,89 @@ const AddProductPage: React.FC = () => {
                     {/* Product Images (up to 5) */}
                     <div>
                       <label htmlFor="images" className="block text-sm font-medium text-gray-700 mb-1">
-                        Product Images (up to 5) {formData.images.length === 0 && <span className="text-red-500">*</span>}
+                        Product Images (up to 5) <span className="text-red-500">*</span>
                       </label>
-                      {imagePreviews.length > 0 ? (
-                        <div className="mt-2 space-y-3">
-                          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-                            {imagePreviews.map((preview, index) => (
-                              <div key={index} className="relative group">
-                                <img
-                                  src={preview}
-                                  alt={`Product preview ${index + 1}`}
-                                  className="w-full h-32 object-cover rounded-lg border border-gray-300"
-                                />
-                                <button
-                                  type="button"
-                                  onClick={() => handleRemoveImage(index)}
-                                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100"
-                                  title="Remove image"
-                                >
-                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                  </svg>
-                                </button>
-                                <div className="absolute bottom-1 left-1 bg-black/50 text-white text-xs px-2 py-1 rounded">
-                                  {index + 1}
+                      {/* Fixed height container to prevent layout jumping */}
+                      <div className="mt-2 min-h-[200px] transition-all duration-300 ease-in-out">
+                        {imagePreviews.length > 0 ? (
+                          <div className="space-y-3">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                              {imagePreviews.map((preview, index) => (
+                                <div key={index} className="relative group">
+                                  <img
+                                    src={preview}
+                                    alt={`Product preview ${index + 1}`}
+                                    className="w-full h-32 object-cover rounded-lg border border-gray-300"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRemoveImage(index)}
+                                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100"
+                                    title="Remove image"
+                                  >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                  </button>
+                                  <div className="absolute bottom-1 left-1 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                                    {index + 1}
+                                  </div>
                                 </div>
-                              </div>
-                            ))}
-                          </div>
-                          <div className="text-xs text-gray-600">
-                            {formData.images.length} image(s) selected ({(formData.images.reduce((total, img) => total + img.size, 0) / 1024 / 1024).toFixed(2)} MB total)
+                              ))}
+                            </div>
+                            <div className="text-xs text-gray-600">
+                              {formData.images.length} image(s) selected ({(formData.images.reduce((total, img) => total + img.size, 0) / 1024 / 1024).toFixed(2)} MB total)
+                              {formData.images.length < 5 && (
+                                <span className="ml-2 text-gray-500">({5 - formData.images.length} more can be added)</span>
+                              )}
+                            </div>
                             {formData.images.length < 5 && (
-                              <span className="ml-2 text-gray-500">({5 - formData.images.length} more can be added)</span>
+                              <label htmlFor="images" className="block">
+                                <div className="flex justify-center px-3 sm:px-6 pt-3 sm:pt-4 pb-3 sm:pb-4 border-2 border-gray-300 border-dashed rounded-md hover:border-accent transition-colors cursor-pointer">
+                                  <div className="space-y-1 text-center">
+                                    <PhotoIcon className="mx-auto h-8 w-8 sm:h-10 sm:w-10 text-gray-400" />
+                                    <div className="text-xs sm:text-sm text-gray-600">
+                                      <span className="font-medium text-secondary hover:text-secondary/80">Add more images</span>
+                                    </div>
+                                    <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB each</p>
+                                  </div>
+                                  <input
+                                    id="images"
+                                    name="images"
+                                    type="file"
+                                    className="sr-only"
+                                    onChange={handleFileChange}
+                                    accept="image/*"
+                                    multiple
+                                  />
+                                </div>
+                              </label>
                             )}
                           </div>
-                          {formData.images.length < 5 && (
-                            <label htmlFor="images" className="block">
-                              <div className="flex justify-center px-3 sm:px-6 pt-3 sm:pt-4 pb-3 sm:pb-4 border-2 border-gray-300 border-dashed rounded-md hover:border-accent transition-colors cursor-pointer">
-                                <div className="space-y-1 text-center">
-                                  <PhotoIcon className="mx-auto h-8 w-8 sm:h-10 sm:w-10 text-gray-400" />
-                                  <div className="text-xs sm:text-sm text-gray-600">
-                                    <span className="font-medium text-secondary hover:text-secondary/80">Add more images</span>
-                                  </div>
-                                  <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB each</p>
-                                </div>
-                      <input
-                                  id="images"
-                                  name="images"
-                                  type="file"
-                                  className="sr-only"
-                                  onChange={handleFileChange}
-                                  accept="image/*"
-                                  multiple
-                      />
-                    </div>
-                      </label>
-                          )}
-                        </div>
-                      ) : (
-                      <div className="mt-1 flex justify-center px-3 sm:px-6 pt-4 sm:pt-5 pb-4 sm:pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-accent transition-colors">
-                        <div className="space-y-1 text-center">
-                          <PhotoIcon className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400" />
-                          <div className="flex flex-col sm:flex-row text-xs sm:text-sm text-gray-600 items-center gap-1 sm:gap-0">
-                              <label htmlFor="images" className="relative cursor-pointer bg-white rounded-md font-medium text-secondary hover:text-secondary/80 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-secondary">
-                                <span>Upload images</span>
-                              <input
-                                  id="images"
-                                  name="images"
-                                type="file"
-                                className="sr-only"
-                                onChange={handleFileChange}
-                                accept="image/*"
-                                  multiple
-                              />
-                            </label>
-                            <p className="sm:pl-1 hidden sm:inline">or drag and drop</p>
+                        ) : (
+                          <div className="flex justify-center items-center h-[200px] px-3 sm:px-6 border-2 border-gray-300 border-dashed rounded-md hover:border-accent transition-colors">
+                            <div className="space-y-1 text-center">
+                              <PhotoIcon className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400" />
+                              <div className="flex flex-col sm:flex-row text-xs sm:text-sm text-gray-600 items-center gap-1 sm:gap-0">
+                                <label htmlFor="images" className="relative cursor-pointer bg-white rounded-md font-medium text-secondary hover:text-secondary/80 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-secondary">
+                                  <span>Upload images</span>
+                                  <input
+                                    id="images"
+                                    name="images"
+                                    type="file"
+                                    className="sr-only"
+                                    onChange={handleFileChange}
+                                    accept="image/*"
+                                    multiple
+                                  />
+                                </label>
+                                <p className="sm:pl-1 hidden sm:inline">or drag and drop</p>
+                              </div>
+                              <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB each (up to 5 images)</p>
                             </div>
-                            <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB each (up to 5 images)</p>
                           </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
                       {formErrors.images && <p className="text-red-500 text-sm mt-1">{formErrors.images}</p>}
                     </div>
 
@@ -854,7 +869,9 @@ const AddProductPage: React.FC = () => {
                       </label>
                     </div>
                   </div>
-                )}
+                ) : null}
+                </div>
+                </div>
 
                 {/* Form Actions */}
                 <div className="flex justify-between pt-3 sm:pt-4 gap-2 sm:gap-0">
