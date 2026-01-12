@@ -159,8 +159,8 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
   });
 
   const ProductCard = ({ product, isHomePage = false }) => (
-    <div className={`bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition group ${isHomePage ? 'flex-shrink-0 w-72' : 'w-full'}`}>
-            <div className={`${smallVariant ? 'relative h-28 sm:h-34 md:h-40' : 'relative h-40 sm:h-52 md:h-64'}`}>
+    <div className={`bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition group ${isHomePage ? 'flex-shrink-0 w-56' : 'w-full'}`}>
+            <div className={`${smallVariant ? 'relative h-28 sm:h-34 md:h-40' : isHomePage ? 'relative h-32 sm:h-40' : 'relative h-40 sm:h-52 md:h-64'}`}>
               <Image 
                 src={product.image} 
                 alt={product.name} 
@@ -178,7 +178,7 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
           </span>
         </div>
             </div>
-            <div className={`${smallVariant ? 'p-2' : 'p-4'}`}>
+            <div className={`${smallVariant ? 'p-2' : isHomePage ? 'p-3' : 'p-4'}`}>
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm text-gray-500 capitalize">{product.type}</span>
           <div className="flex items-center">
@@ -226,16 +226,16 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
           </p>
         </div>
       ) : isHomePage ? (
-        <div className="space-y-8">
+        <div className="space-y-6">
           {/* First Row - Left to Right */}
-          <div className="flex gap-6 pb-4 scrollbar-hide overflow-hidden">
-            <div className="flex gap-6 animate-scroll-left">
+          <div className="flex gap-4 pb-4 scrollbar-hide overflow-hidden">
+            <div className="flex gap-4 animate-scroll-left">
               {sortedProducts.slice(0, Math.ceil(sortedProducts.length / 2)).map((product) => (
                 <ProductCard key={product.id} product={product} isHomePage={true} />
               ))}
             </div>
             {/* Duplicate for seamless loop */}
-            <div className="flex gap-6 animate-scroll-left">
+            <div className="flex gap-4 animate-scroll-left">
               {sortedProducts.slice(0, Math.ceil(sortedProducts.length / 2)).map((product) => (
                 <ProductCard key={`duplicate-${product.id}`} product={product} isHomePage={true} />
               ))}
@@ -243,14 +243,14 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
       </div>
       
           {/* Second Row - Right to Left */}
-          <div className="flex gap-6 pb-4 scrollbar-hide overflow-hidden">
-            <div className="flex gap-6 animate-scroll-right">
+          <div className="flex gap-4 pb-4 scrollbar-hide overflow-hidden">
+            <div className="flex gap-4 animate-scroll-right">
               {sortedProducts.slice(Math.ceil(sortedProducts.length / 2)).map((product) => (
                 <ProductCard key={product.id} product={product} isHomePage={true} />
               ))}
             </div>
             {/* Duplicate for seamless loop */}
-            <div className="flex gap-6 animate-scroll-right">
+            <div className="flex gap-4 animate-scroll-right">
               {sortedProducts.slice(Math.ceil(sortedProducts.length / 2)).map((product) => (
                 <ProductCard key={`duplicate-${product.id}`} product={product} isHomePage={true} />
               ))}
