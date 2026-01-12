@@ -65,8 +65,8 @@ const ProductsPage: React.FC = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setProducts(data.results || data);
+      const data = await response.json();
+      setProducts(data.results || data);
         setError(null);
       } else {
         // Handle token expiration
@@ -245,8 +245,8 @@ const ProductsPage: React.FC = () => {
                                 <>
                                   <img 
                                     src={imageUrl}
-                                    alt={product.name}
-                                    className="h-12 w-12 sm:h-16 sm:w-16 rounded-lg object-cover"
+                              alt={product.name}
+                              className="h-12 w-12 sm:h-16 sm:w-16 rounded-lg object-cover"
                                     onError={(e) => {
                                       // Fallback if image fails to load - replace with placeholder
                                       const target = e.target as HTMLImageElement;
@@ -268,9 +268,9 @@ const ProductsPage: React.FC = () => {
                               );
                             } else {
                               return (
-                                <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-lg bg-accent/20 flex items-center justify-center">
-                                  <span className="text-accent text-xs">No Image</span>
-                                </div>
+                            <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-lg bg-accent/20 flex items-center justify-center">
+                              <span className="text-accent text-xs">No Image</span>
+                            </div>
                               );
                             }
                           })()}

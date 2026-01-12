@@ -313,42 +313,42 @@ const UsersPage: React.FC = () => {
           {/* Users List */}
           {users.length > 0 ? (
             <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-              <ul className="divide-y divide-gray-200">
-                {users.map((user) => (
-                  <li key={user.id}>
+            <ul className="divide-y divide-gray-200">
+              {users.map((user) => (
+                <li key={user.id}>
                     <div className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 hover:bg-gray-50 transition-colors duration-200">
-                      <div className="flex items-start sm:items-center w-full sm:w-auto min-w-0">
-                        <div className="flex-shrink-0 h-10 w-10">
-                          <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                            <UserIcon className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
-                          </div>
+                    <div className="flex items-start sm:items-center w-full sm:w-auto min-w-0">
+                      <div className="flex-shrink-0 h-10 w-10">
+                        <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                          <UserIcon className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
                         </div>
-                        <div className="ml-3 sm:ml-4 min-w-0 flex-1">
-                          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                            <h3 className="text-base sm:text-lg font-medium text-gray-900 truncate">
-                              {user.username}
-                            </h3>
-                            <span className={`sm:ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium w-fit ${getRoleColor(user.role)}`}>
-                              {user.role.toUpperCase()}
-                            </span>
-                            <span className={`sm:ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium w-fit ${
-                              user.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                            }`}>
-                              {user.is_active ? 'Active' : 'Inactive'}
-                            </span>
-                          </div>
-                          <p className="text-xs sm:text-sm text-gray-500 truncate mt-1">{user.email}</p>
+                      </div>
+                      <div className="ml-3 sm:ml-4 min-w-0 flex-1">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                          <h3 className="text-base sm:text-lg font-medium text-gray-900 truncate">
+                            {user.username}
+                          </h3>
+                          <span className={`sm:ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium w-fit ${getRoleColor(user.role)}`}>
+                            {user.role.toUpperCase()}
+                          </span>
+                          <span className={`sm:ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium w-fit ${
+                            user.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                          }`}>
+                            {user.is_active ? 'Active' : 'Inactive'}
+                          </span>
+                        </div>
+                        <p className="text-xs sm:text-sm text-gray-500 truncate mt-1">{user.email}</p>
                           {user.first_name || user.last_name ? (
                             <p className="text-xs sm:text-sm text-gray-500 mt-1">
                               {[user.first_name, user.last_name].filter(Boolean).join(' ')}
                             </p>
                           ) : null}
-                          <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                            Joined: {new Date(user.date_joined).toLocaleDateString()}
-                          </p>
-                        </div>
+                        <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                          Joined: {new Date(user.date_joined).toLocaleDateString()}
+                        </p>
                       </div>
-                      <div className="flex items-center space-x-2 self-end sm:self-auto">
+                    </div>
+                    <div className="flex items-center space-x-2 self-end sm:self-auto">
                         <button
                           onClick={() => handleToggleActive(user)}
                           className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
@@ -365,21 +365,21 @@ const UsersPage: React.FC = () => {
                           className="p-2 text-accent hover:text-secondary hover:bg-secondary/10 rounded-lg transition-all duration-200"
                           title="Edit user"
                         >
-                          <PencilIcon className="w-4 h-4" />
-                        </button>
+                        <PencilIcon className="w-4 h-4" />
+                      </button>
                         <button 
                           onClick={() => handleDelete(user.id, user.username)}
                           className="p-2 text-accent hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
                           title="Delete user"
                         >
-                          <TrashIcon className="w-4 h-4" />
-                        </button>
-                      </div>
+                        <TrashIcon className="w-4 h-4" />
+                      </button>
                     </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
           ) : (
             <div className="text-center py-8 sm:py-12 px-4 bg-white rounded-lg shadow-sm border border-accent/20">
               <h3 className="text-base sm:text-lg font-medium text-gray-900">No users found</h3>

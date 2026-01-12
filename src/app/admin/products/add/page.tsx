@@ -149,8 +149,8 @@ const AddProductPage: React.FC = () => {
   const nextStep = () => {
     if (currentStep === 1) {
       if (validateStep1()) {
-        setCurrentStep(2);
-        setFormErrors({});
+      setCurrentStep(2);
+      setFormErrors({});
       }
     }
   };
@@ -168,7 +168,7 @@ const AddProductPage: React.FC = () => {
     // On step 1, just move to next step without submitting
     if (currentStep === 1) {
       if (validateStep1()) {
-        nextStep();
+      nextStep();
       }
       return;
     }
@@ -199,10 +199,10 @@ const AddProductPage: React.FC = () => {
         const errorMsg = 'Authentication required. Please log in again.';
         setFormErrors({ _general: errorMsg });
         toast.error(errorMsg);
-        return;
-      }
+      return;
+    }
 
-      setSubmitting(true);
+    setSubmitting(true);
     
     const createToast = toast.loading('Creating product...');
 
@@ -372,7 +372,7 @@ const AddProductPage: React.FC = () => {
     // Add new files to form data
     const newImages = [...formData.images, ...filesToAdd];
     setFormData(prev => ({ ...prev, images: newImages }));
-
+      
     // Create previews for new images
     filesToAdd.forEach((file) => {
       const reader = new FileReader();
@@ -509,16 +509,16 @@ const AddProductPage: React.FC = () => {
                       <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
                         Category *
                       </label>
-                    <select
-                      id="category"
+                      <select
+                        id="category"
                       value={formData.category || ''}
                       onChange={(e) => {
                         const value = e.target.value;
                         handleInputChange('category', value === '' ? 0 : parseInt(value, 10));
                       }}
-                      disabled={loading}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
-                    >
+                        disabled={loading}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      >
                         <option value="">
                           {loading 
                             ? 'Loading categories...' 
@@ -801,7 +801,7 @@ const AddProductPage: React.FC = () => {
                                   </div>
                                   <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB each</p>
                                 </div>
-                                <input
+                      <input
                                   id="images"
                                   name="images"
                                   type="file"
@@ -809,29 +809,29 @@ const AddProductPage: React.FC = () => {
                                   onChange={handleFileChange}
                                   accept="image/*"
                                   multiple
-                                />
-                              </div>
-                            </label>
+                      />
+                    </div>
+                      </label>
                           )}
                         </div>
                       ) : (
-                        <div className="mt-1 flex justify-center px-3 sm:px-6 pt-4 sm:pt-5 pb-4 sm:pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-accent transition-colors">
-                          <div className="space-y-1 text-center">
-                            <PhotoIcon className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400" />
-                            <div className="flex flex-col sm:flex-row text-xs sm:text-sm text-gray-600 items-center gap-1 sm:gap-0">
+                      <div className="mt-1 flex justify-center px-3 sm:px-6 pt-4 sm:pt-5 pb-4 sm:pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-accent transition-colors">
+                        <div className="space-y-1 text-center">
+                          <PhotoIcon className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400" />
+                          <div className="flex flex-col sm:flex-row text-xs sm:text-sm text-gray-600 items-center gap-1 sm:gap-0">
                               <label htmlFor="images" className="relative cursor-pointer bg-white rounded-md font-medium text-secondary hover:text-secondary/80 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-secondary">
                                 <span>Upload images</span>
-                                <input
+                              <input
                                   id="images"
                                   name="images"
-                                  type="file"
-                                  className="sr-only"
-                                  onChange={handleFileChange}
-                                  accept="image/*"
+                                type="file"
+                                className="sr-only"
+                                onChange={handleFileChange}
+                                accept="image/*"
                                   multiple
-                                />
-                              </label>
-                              <p className="sm:pl-1 hidden sm:inline">or drag and drop</p>
+                              />
+                            </label>
+                            <p className="sm:pl-1 hidden sm:inline">or drag and drop</p>
                             </div>
                             <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB each (up to 5 images)</p>
                           </div>
@@ -898,8 +898,8 @@ const AddProductPage: React.FC = () => {
                         </>
                       ) : (
                         <>
-                          <span className="hidden sm:inline">Create Product</span>
-                          <span className="sm:hidden">Create</span>
+                        <span className="hidden sm:inline">Create Product</span>
+                        <span className="sm:hidden">Create</span>
                         </>
                       )}
                     </button>
