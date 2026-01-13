@@ -1,16 +1,21 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import AdminLayout from '@/components/admin/AdminLayout';
 import ProtectedRoute from '@/components/admin/ProtectedRoute';
 import ApiSwitcher from '@/components/admin/ApiSwitcher';
 import { getApiUrl } from '@/config/api';
+import { useAuth } from '@/contexts/AuthContext';
+import { getApiHeaders, handleTokenExpiration } from '@/utils/apiHelpers';
 import {
   CubeIcon,
   TagIcon,
   ShoppingCartIcon,
   UsersIcon,
   CurrencyDollarIcon,
+  PencilIcon,
+  EyeIcon,
 } from '@heroicons/react/24/outline';
 
 interface DashboardStats {
@@ -21,7 +26,24 @@ interface DashboardStats {
   totalRevenue: number;
 }
 
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  stock: number;
+  category: {
+    id: number;
+    name: string;
+  };
+  is_active: boolean;
+  image?: string;
+  images?: Array<{ id: number; image: string; order: number }>;
+  created_at: string;
+}
+
 const AdminDashboard: React.FC = () => {
+  const router = useRouter();
+  const { token } = useAuth();
   const [stats, setStats] = useState<DashboardStats>({
     totalProducts: 0,
     totalCategories: 0,
@@ -29,11 +51,23 @@ const AdminDashboard: React.FC = () => {
     totalUsers: 0,
     totalRevenue: 0,
   });
-  // loading state not required for this dashboard; remove unused variable
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
 
   useEffect(() => {
     fetchDashboardData();
+    // Also try fetching with auth if token is available
+    if (token) {
+      fetchProducts();
+    }
   }, []);
+
+  useEffect(() => {
+    // Refetch products when token becomes available
+    if (token) {
+      fetchProducts();
+    }
+  }, [token]);
 
   const fetchDashboardData = async () => {
     try {
@@ -43,11 +77,28 @@ const AdminDashboard: React.FC = () => {
         fetch(`${apiUrl}/api/categories/`),
       ]);
 
-      const products = await productsRes.json();
+      const productsData = await productsRes.json();
       const categories = await categoriesRes.json();
 
+      // Extract products list from response
+      let productsList = [];
+      if (Array.isArray(productsData)) {
+        productsList = productsData;
+      } else if (productsData.results && Array.isArray(productsData.results)) {
+        productsList = productsData.results;
+      }
+
+      // Set products if we got them
+      if (productsList.length > 0) {
+        const sortedProducts = [...productsList].sort((a, b) => 
+          new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
+        );
+        setProducts(sortedProducts);
+        setLoadingProducts(false);
+      }
+
       setStats({
-        totalProducts: products.count || products.length || 0,
+        totalProducts: productsData.count || productsData.length || productsList.length || 0,
         totalCategories: categories.count || categories.length || 0,
         totalOrders: 0,
         totalUsers: 0,
@@ -55,6 +106,55 @@ const AdminDashboard: React.FC = () => {
       });
     } catch (error) {
       // Error handled silently - stats will remain at default values
+      setLoadingProducts(false);
+    }
+  };
+
+  const fetchProducts = async () => {
+    const apiUrl = getApiUrl();
+    if (!apiUrl) {
+      setLoadingProducts(false);
+      return;
+    }
+
+    try {
+      // Try with auth first, fallback to without auth if token not available
+      const headers = token ? getApiHeaders(token) as Record<string, string> : {};
+      const response = await fetch(`${apiUrl}/api/products/`, {
+        method: 'GET',
+        headers: headers,
+      });
+
+      if (token && handleTokenExpiration(response)) {
+        setLoadingProducts(false);
+        return;
+      }
+
+      if (response.ok) {
+        const data = await response.json();
+        // Handle both paginated and non-paginated responses
+        let productsList = [];
+        if (Array.isArray(data)) {
+          productsList = data;
+        } else if (data.results && Array.isArray(data.results)) {
+          productsList = data.results;
+        } else if (data.count !== undefined) {
+          productsList = data.results || [];
+        }
+        
+        const sortedProducts = productsList.length > 0
+          ? [...productsList].sort((a, b) => 
+              new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
+            )
+          : [];
+        setProducts(sortedProducts);
+      } else {
+        setProducts([]);
+      }
+    } catch (error) {
+      setProducts([]);
+    } finally {
+      setLoadingProducts(false);
     }
   };
 
@@ -136,46 +236,142 @@ const AdminDashboard: React.FC = () => {
             ))}
           </div>
 
-          <div className="bg-white shadow rounded-lg" style={{ border: '1px solid #94a3b8' }}>
-            <div className="px-3 py-4 sm:px-4 sm:py-5 lg:px-6 lg:py-6">
-              <h3 className="text-base sm:text-lg leading-6 font-medium" style={{ color: 'var(--color-primary)' }}>
-                Quick Actions
-              </h3>
-              <div className="mt-4 sm:mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
-                <button 
-                  className="inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md text-white transition-colors"
-                  style={{ backgroundColor: 'var(--color-primary)' }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-primary)'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-primary)'}
+          {/* Products Table */}
+          <div className="bg-white shadow rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-accent)' }}>
+            <div className="px-3 py-4 sm:px-4 sm:py-5 lg:px-6 lg:py-6 border-b" style={{ borderColor: 'var(--color-accent)' }}>
+              <div className="flex items-center justify-between">
+                <h3 className="text-base sm:text-lg font-medium" style={{ color: 'var(--color-primary)' }}>
+                  All Products ({products.length})
+                </h3>
+                <button
+                  onClick={() => router.push('/admin/products')}
+                  className="text-xs sm:text-sm font-medium hover:underline"
+                  style={{ color: 'var(--color-primary)' }}
                 >
-                  Add Product
-                </button>
-                <button 
-                  className="inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md text-white transition-colors"
-                  style={{ backgroundColor: 'var(--color-success)' }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-success)'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-success)'}
-                >
-                  Add Category
-                </button>
-                <button 
-                  className="inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md text-white transition-colors"
-                  style={{ backgroundColor: 'var(--color-warning)' }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-warning)'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-warning)'}
-                >
-                  View Orders
-                </button>
-                <button 
-                  className="inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md text-white transition-colors"
-                  style={{ backgroundColor: 'var(--color-secondary)' }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-secondary)'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-secondary)'}
-                >
-                  View Analytics
+                  Manage Products
                 </button>
               </div>
             </div>
+            
+            {loadingProducts ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: 'var(--color-secondary)' }}></div>
+              </div>
+            ) : products.length === 0 ? (
+              <div className="px-3 py-8 sm:px-4 sm:py-12 text-center">
+                <p className="text-sm sm:text-base" style={{ color: 'var(--color-accent)' }}>No products found</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-accent)' }}>
+                        Product
+                      </th>
+                      <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-accent)' }}>
+                        Category
+                      </th>
+                      <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-accent)' }}>
+                        Price
+                      </th>
+                      <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-accent)' }}>
+                        Stock
+                      </th>
+                      <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-accent)' }}>
+                        Status
+                      </th>
+                      <th className="px-3 py-3 text-right text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-accent)' }}>
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {products.map((product) => {
+                      const firstImage = product.images && product.images.length > 0 
+                        ? product.images[0].image 
+                        : product.image;
+                      const imageUrl = firstImage 
+                        ? (firstImage.startsWith('http') ? firstImage : `${getApiUrl()}${firstImage}`)
+                        : null;
+
+                      return (
+                        <tr key={product.id} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-3 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div className="flex-shrink-0 h-10 w-10">
+                                {imageUrl ? (
+                                  <img
+                                    src={imageUrl}
+                                    alt={product.name}
+                                    className="h-10 w-10 rounded object-cover"
+                                    onError={(e) => {
+                                      const target = e.target as HTMLImageElement;
+                                      target.style.display = 'none';
+                                    }}
+                                  />
+                                ) : (
+                                  <div className="h-10 w-10 rounded bg-gray-200 flex items-center justify-center">
+                                    <CubeIcon className="h-5 w-5 text-gray-400" />
+                                  </div>
+                                )}
+                              </div>
+                              <div className="ml-3">
+                                <div className="text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
+                                  {product.name}
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-3 py-4 whitespace-nowrap">
+                            <div className="text-sm" style={{ color: 'var(--color-accent)' }}>
+                              {product.category?.name || 'N/A'}
+                            </div>
+                          </td>
+                          <td className="px-3 py-4 whitespace-nowrap">
+                            <div className="text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
+                              ${typeof product.price === 'number' ? product.price.toFixed(2) : parseFloat(product.price || 0).toFixed(2)}
+                            </div>
+                          </td>
+                          <td className="px-3 py-4 whitespace-nowrap">
+                            <div className="text-sm" style={{ color: 'var(--color-accent)' }}>
+                              {product.stock}
+                            </div>
+                          </td>
+                          <td className="px-3 py-4 whitespace-nowrap">
+                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                              product.is_active 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-red-100 text-red-800'
+                            }`}>
+                              {product.is_active ? 'Active' : 'Inactive'}
+                            </span>
+                          </td>
+                          <td className="px-3 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div className="flex items-center justify-end space-x-2">
+                              <button
+                                onClick={() => router.push(`/admin/products/edit/${product.id}`)}
+                                className="p-1.5 rounded hover:bg-gray-100 transition-colors"
+                                title="Edit product"
+                              >
+                                <PencilIcon className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
+                              </button>
+                              <button
+                                onClick={() => router.push(`/admin/products`)}
+                                className="p-1.5 rounded hover:bg-gray-100 transition-colors"
+                                title="View product"
+                              >
+                                <EyeIcon className="h-4 w-4" style={{ color: 'var(--color-accent)' }} />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
       </AdminLayout>
