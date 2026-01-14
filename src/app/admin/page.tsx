@@ -17,6 +17,7 @@ import {
   PencilIcon,
   EyeIcon,
 } from '@heroicons/react/24/outline';
+import toast from 'react-hot-toast';
 
 interface DashboardStats {
   totalProducts: number;
@@ -36,6 +37,7 @@ interface Product {
     name: string;
   };
   is_active: boolean;
+  is_approved: boolean;
   image?: string;
   images?: Array<{ id: number; image: string; order: number }>;
   created_at: string;
@@ -53,6 +55,7 @@ const AdminDashboard: React.FC = () => {
   });
   const [products, setProducts] = useState<Product[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
+  const [approving, setApproving] = useState<number | null>(null);
 
   useEffect(() => {
     fetchDashboardData();
@@ -155,6 +158,87 @@ const AdminDashboard: React.FC = () => {
       setProducts([]);
     } finally {
       setLoadingProducts(false);
+    }
+  };
+
+  const handleApprove = async (productId: number) => {
+    const apiUrl = getApiUrl();
+    if (!apiUrl || !token) {
+      toast.error('Authentication required');
+      return;
+    }
+
+    setApproving(productId);
+    const approveToast = toast.loading('Approving product...');
+
+    try {
+      const headers = getApiHeaders(token) as Record<string, string>;
+      const response = await fetch(`${apiUrl}/api/products/${productId}/approve/`, {
+        method: 'POST',
+        headers: headers,
+      });
+
+      if (handleTokenExpiration(response)) {
+        toast.dismiss(approveToast);
+        setApproving(null);
+        return;
+      }
+
+      if (response.ok) {
+        toast.success('Product approved successfully!', { id: approveToast });
+        setProducts(products.map(p => 
+          p.id === productId ? { ...p, is_approved: true } : p
+        ));
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        toast.error(errorData.message || 'Failed to approve product', { id: approveToast });
+      }
+    } catch (error) {
+      toast.error('Network error. Please try again.', { id: approveToast });
+    } finally {
+      setApproving(null);
+    }
+  };
+
+  const handleReject = async (productId: number) => {
+    const apiUrl = getApiUrl();
+    if (!apiUrl || !token) {
+      toast.error('Authentication required');
+      return;
+    }
+
+    const confirmed = window.confirm('Are you sure you want to reject this product? It will no longer be visible to clients.');
+    if (!confirmed) return;
+
+    setApproving(productId);
+    const rejectToast = toast.loading('Rejecting product...');
+
+    try {
+      const headers = getApiHeaders(token) as Record<string, string>;
+      const response = await fetch(`${apiUrl}/api/products/${productId}/reject/`, {
+        method: 'POST',
+        headers: headers,
+      });
+
+      if (handleTokenExpiration(response)) {
+        toast.dismiss(rejectToast);
+        setApproving(null);
+        return;
+      }
+
+      if (response.ok) {
+        toast.success('Product rejected', { id: rejectToast });
+        setProducts(products.map(p => 
+          p.id === productId ? { ...p, is_approved: false } : p
+        ));
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        toast.error(errorData.message || 'Failed to reject product', { id: rejectToast });
+      }
+    } catch (error) {
+      toast.error('Network error. Please try again.', { id: rejectToast });
+    } finally {
+      setApproving(null);
     }
   };
 
@@ -281,6 +365,9 @@ const AdminDashboard: React.FC = () => {
                       <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-accent)' }}>
                         Status
                       </th>
+                      <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-accent)' }}>
+                        Approval
+                      </th>
                       <th className="px-3 py-3 text-right text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-accent)' }}>
                         Actions
                       </th>
@@ -346,6 +433,39 @@ const AdminDashboard: React.FC = () => {
                             }`}>
                               {product.is_active ? 'Active' : 'Inactive'}
                             </span>
+                          </td>
+                          <td className="px-3 py-4 whitespace-nowrap">
+                            <div className="flex items-center space-x-2">
+                              <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                product.is_approved 
+                                  ? 'bg-blue-100 text-blue-800' 
+                                  : 'bg-yellow-100 text-yellow-800'
+                              }`}>
+                                {product.is_approved ? 'Approved' : 'Pending'}
+                              </span>
+                              {!product.is_approved && (
+                                <button
+                                  onClick={() => handleApprove(product.id)}
+                                  disabled={approving === product.id}
+                                  className="px-2 py-1 text-xs font-medium text-white rounded hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                                  style={{ backgroundColor: 'var(--color-success)' }}
+                                  title="Approve product"
+                                >
+                                  {approving === product.id ? 'Approving...' : 'Approve'}
+                                </button>
+                              )}
+                              {product.is_approved && (
+                                <button
+                                  onClick={() => handleReject(product.id)}
+                                  disabled={approving === product.id}
+                                  className="px-2 py-1 text-xs font-medium text-white rounded hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                                  style={{ backgroundColor: 'var(--color-warning)' }}
+                                  title="Reject product"
+                                >
+                                  {approving === product.id ? 'Rejecting...' : 'Reject'}
+                                </button>
+                              )}
+                            </div>
                           </td>
                           <td className="px-3 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div className="flex items-center justify-end space-x-2">
