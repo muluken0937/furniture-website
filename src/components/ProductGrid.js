@@ -1,137 +1,106 @@
-// src/components/ProductGrid.js
+'use client';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { getApiUrl } from '@/config/api';
 
-export default function ProductGrid({ selectedCategory = 'all', selectedType = 'all', priceRange = [0, 5000], sortBy = 'featured', searchQuery = '', isHomePage = false, smallVariant = false }) {
-  const products = [
-    { 
-      id: 1, 
-      name: 'Modern Sofa', 
-      price: 899, 
-      category: 'sofa', 
-      type: 'house',
-      image: '/images/gray-sofa.jpeg',
-      rating: 4.8,
-      dateAdded: '2024-01-15'
-    },
-    { 
-      id: 2, 
-      name: 'Wooden Dining Table', 
-      price: 1200, 
-      category: 'table', 
-      type: 'house',
-      image: '/images/dinning table.webp',
-      rating: 4.6,
-      dateAdded: '2024-01-10'
-    },
-    { 
-      id: 3, 
-      name: 'Ergonomic Office Chair', 
-      price: 450, 
-      category: 'chair', 
-      type: 'office',
-      image: '/images/linen-chair.jpeg',
-      rating: 4.9,
-      dateAdded: '2024-01-20'
-    },
-    { 
-      id: 4, 
-      name: 'King Size Bed', 
-      price: 1500, 
-      category: 'bed', 
-      type: 'house',
-      image: '/images/wooden-bed.jpg',
-      rating: 4.7,
-      dateAdded: '2024-01-05'
-    },
-    { 
-      id: 5, 
-      name: 'Office Desk', 
-      price: 350, 
-      category: 'table', 
-      type: 'office',
-      image: '/images/office table.jpeg',
-      rating: 4.5,
-      dateAdded: '2024-01-18'
-    },
-    { 
-      id: 6, 
-      name: 'Leather Office Chair', 
-      price: 650, 
-      category: 'chair', 
-      type: 'office',
-      image: '/images/linen-chair.jpeg',
-      rating: 4.8,
-      dateAdded: '2024-01-12'
-    },
-    { 
-      id: 7, 
-      name: 'Sectional Sofa', 
-      price: 1800, 
-      category: 'sofa', 
-      type: 'house',
-      image: '/images/sofa.jpg',
-      rating: 4.9,
-      dateAdded: '2024-01-08'
-    },
-    { 
-      id: 8, 
-      name: 'Queen Size Bed', 
-      price: 1200, 
-      category: 'bed', 
-      type: 'house',
-      image: '/images/wooden-bed.jpg',
-      rating: 4.6,
-      dateAdded: '2024-01-22'
-    },
-    { 
-      id: 9, 
-      name: 'Coffee Table', 
-      price: 280, 
-      category: 'table', 
-      type: 'house',
-      image: '/images/dinning table.webp',
-      rating: 4.4,
-      dateAdded: '2024-01-14'
-    },
-    { 
-      id: 10, 
-      name: 'Accent Chair', 
-      price: 320, 
-      category: 'chair', 
-      type: 'house',
-      image: '/images/linen-chair.jpeg',
-      rating: 4.7,
-      dateAdded: '2024-01-16'
-    },
-    { 
-      id: 11, 
-      name: 'Conference Table', 
-      price: 2200, 
-      category: 'table', 
-      type: 'office',
-      image: '/images/office table.jpeg',
-      rating: 4.8,
-      dateAdded: '2024-01-11'
-    },
-    { 
-      id: 12, 
-      name: 'Loveseat', 
-      price: 750, 
-      category: 'sofa', 
-      type: 'house',
-      image: '/images/gray-sofa.jpeg',
-      rating: 4.5,
-      dateAdded: '2024-01-19'
-    }
-  ];
+// Mock products data
+const MOCK_PRODUCTS = [
+  { id: 1, name: 'Modern Sofa', price: 899, category: 'sofa', type: 'house', image: '/images/gray-sofa.jpeg', rating: 4.8, dateAdded: '2024-01-15' },
+  { id: 2, name: 'Wooden Dining Table', price: 1200, category: 'table', type: 'house', image: '/images/dinning table.webp', rating: 4.6, dateAdded: '2024-01-10' },
+  { id: 3, name: 'Ergonomic Office Chair', price: 450, category: 'chair', type: 'office', image: '/images/linen-chair.jpeg', rating: 4.9, dateAdded: '2024-01-20' },
+  { id: 4, name: 'King Size Bed', price: 1500, category: 'bed', type: 'house', image: '/images/wooden-bed.jpg', rating: 4.7, dateAdded: '2024-01-05' },
+  { id: 5, name: 'Office Desk', price: 350, category: 'table', type: 'office', image: '/images/office table.jpeg', rating: 4.5, dateAdded: '2024-01-18' },
+  { id: 6, name: 'Leather Office Chair', price: 650, category: 'chair', type: 'office', image: '/images/linen-chair.jpeg', rating: 4.8, dateAdded: '2024-01-12' },
+  { id: 7, name: 'Sectional Sofa', price: 1800, category: 'sofa', type: 'house', image: '/images/sofa.jpg', rating: 4.9, dateAdded: '2024-01-08' },
+  { id: 8, name: 'Queen Size Bed', price: 1200, category: 'bed', type: 'house', image: '/images/wooden-bed.jpg', rating: 4.6, dateAdded: '2024-01-22' },
+  { id: 9, name: 'Coffee Table', price: 280, category: 'table', type: 'house', image: '/images/dinning table.webp', rating: 4.4, dateAdded: '2024-01-14' },
+  { id: 10, name: 'Accent Chair', price: 320, category: 'chair', type: 'house', image: '/images/linen-chair.jpeg', rating: 4.7, dateAdded: '2024-01-16' },
+  { id: 11, name: 'Conference Table', price: 2200, category: 'table', type: 'office', image: '/images/office table.jpeg', rating: 4.8, dateAdded: '2024-01-11' },
+  { id: 12, name: 'Loveseat', price: 750, category: 'sofa', type: 'house', image: '/images/gray-sofa.jpeg', rating: 4.5, dateAdded: '2024-01-19' }
+];
 
-  // Filter products based on selected filters and search query
-  const filteredProducts = products.filter(product => {
-    const categoryMatch = selectedCategory === '' || selectedCategory === 'all' || product.category === selectedCategory;
-    const typeMatch = selectedType === '' || selectedType === 'all' || product.type === selectedType;
-    const priceMatch = product.price >= priceRange[0] && product.price <= priceRange[1];
+// Transform API product to component format
+const transformProduct = (product, apiUrl) => {
+  const firstImage = product.images?.[0]?.image || product.image;
+  const imageUrl = firstImage 
+    ? (firstImage.startsWith('http') ? firstImage : `${apiUrl}${firstImage}`)
+    : '/images/placeholder.jpg';
+  
+  return {
+    id: product.id,
+    name: product.name,
+    price: parseFloat(product.price) || 0,
+    category: product.category?.name?.toLowerCase() || 'other',
+    type: 'house',
+    image: imageUrl,
+    rating: 4.5,
+    dateAdded: product.created_at || new Date().toISOString(),
+    description: product.description,
+    stock: product.stock,
+    sku: product.sku,
+  };
+};
+
+export default function ProductGrid({ 
+  selectedCategory = 'all', 
+  selectedType = 'all', 
+  priceRange = [0, 5000], 
+  sortBy = 'featured', 
+  searchQuery = '', 
+  isHomePage = false, 
+  smallVariant = false 
+}) {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    const apiUrl = getApiUrl();
     
-    // Search functionality - search in product name, category, and type
+    if (!apiUrl) {
+      setProducts(MOCK_PRODUCTS);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${apiUrl}/api/products/`, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const productsList = data.results || data;
+        const transformedProducts = (Array.isArray(productsList) ? productsList : [])
+          .map(product => transformProduct(product, apiUrl));
+        
+        // Merge with mock products (API products take priority)
+        const mergedProducts = [
+          ...transformedProducts,
+          ...MOCK_PRODUCTS.filter(mock => !transformedProducts.some(api => api.id === mock.id))
+        ];
+        
+        setProducts(mergedProducts);
+      } else {
+        setProducts(MOCK_PRODUCTS);
+      }
+    } catch (err) {
+      console.error('Error fetching products:', err);
+      setProducts(MOCK_PRODUCTS);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Filter products
+  const filteredProducts = products.filter(product => {
+    const categoryMatch = !selectedCategory || selectedCategory === 'all' || 
+      product.category.toLowerCase() === selectedCategory.toLowerCase();
+    const typeMatch = !selectedType || selectedType === 'all' || product.type === selectedType;
+    const priceMatch = product.price >= priceRange[0] && product.price <= priceRange[1];
     const searchMatch = !searchQuery || 
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -140,66 +109,77 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
     return categoryMatch && typeMatch && priceMatch && searchMatch;
   });
 
-  // Sort products based on sortBy parameter
+  // Sort products
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
-      case 'price-low':
-        return a.price - b.price;
-      case 'price-high':
-        return b.price - a.price;
-      case 'newest':
-        return new Date(b.dateAdded) - new Date(a.dateAdded);
-      case 'rating':
-        return b.rating - a.rating;
-      case 'featured':
-      default:
-        // Keep original order for featured
-        return 0;
+      case 'price-low': return a.price - b.price;
+      case 'price-high': return b.price - a.price;
+      case 'newest': return new Date(b.dateAdded) - new Date(a.dateAdded);
+      case 'rating': return b.rating - a.rating;
+      default: return 0;
     }
   });
 
   const ProductCard = ({ product, isHomePage = false }) => (
     <div className={`bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition group ${isHomePage ? 'flex-shrink-0 w-56' : 'w-full'}`}>
-            <div className={`${smallVariant ? 'relative h-28 sm:h-34 md:h-40' : isHomePage ? 'relative h-32 sm:h-40' : 'relative h-40 sm:h-52 md:h-64'}`}>
-              <Image 
-                src={product.image} 
-                alt={product.name} 
-                fill
-                className="object-cover group-hover:scale-105 transition duration-300"
-              />
-              <button className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:bg-primary hover:text-white transition">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-              </button>
+      <div className={`${smallVariant ? 'relative h-28 sm:h-34 md:h-40' : isHomePage ? 'relative h-32 sm:h-40' : 'relative h-40 sm:h-52 md:h-64'}`}>
+        <Image 
+          src={product.image} 
+          alt={product.name} 
+          fill
+          className="object-cover group-hover:scale-105 transition duration-300"
+        />
+        <button className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:bg-primary hover:text-white transition">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+        </button>
         <div className="absolute top-4 left-4">
           <span className="bg-primary text-white px-2 py-1 rounded-full text-xs font-medium">
             {product.category.charAt(0).toUpperCase() + product.category.slice(1)}
           </span>
         </div>
-            </div>
-            <div className={`${smallVariant ? 'p-2' : isHomePage ? 'p-3' : 'p-4'}`}>
+      </div>
+      <div className={`${smallVariant ? 'p-2' : isHomePage ? 'p-3' : 'p-4'}`}>
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm text-gray-500 capitalize">{product.type}</span>
           <div className="flex items-center">
             <span className="text-yellow-400 mr-1">&star;</span>
             <span className="text-sm text-gray-600">{product.rating}</span>
-                </div>
-              </div>
-        <h3 className={`${smallVariant ? 'text-sm' : 'text-base'} font-semibold text-gray-900 mb-2`}>{product.name}</h3>
-        <div className="flex items-center justify-between">
-          <span className={`${smallVariant ? 'text-base' : 'text-xl'} font-bold text-primary`}>${product.price}</span>
-          <button className={`${smallVariant ? 'text-white px-2 py-1 rounded-md text-sm' : 'text-white px-4 py-2 rounded-lg'} transition duration-200 bg-secondary-var border-2 border-secondary-var hover:opacity-90`}>
-                  Add 
-                </button>
-              </div>
-            </div>
           </div>
+        </div>
+        <h3 className={`${smallVariant ? 'text-sm' : 'text-base'} font-semibold text-gray-900 mb-2`}>
+          {product.name}
+        </h3>
+        <div className="flex items-center justify-between">
+          <span className={`${smallVariant ? 'text-base' : 'text-xl'} font-bold text-primary`}>
+            ${product.price}
+          </span>
+          <button className={`${smallVariant ? 'text-white px-2 py-1 rounded-md text-sm' : 'text-white px-4 py-2 rounded-lg'} transition duration-200 bg-secondary-var border-2 border-secondary-var hover:opacity-90`}>
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
   );
+
+  if (loading) {
+    return (
+      <section>
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading products...</p>
+        </div>
+      </section>
+    );
+  }
+
+  const showFeaturedHeader = (!selectedCategory || selectedCategory === 'all') && 
+    (!selectedType || selectedType === 'all') && !searchQuery;
 
   return (
     <section>
-      {(selectedCategory === '' || selectedCategory === 'all') && (selectedType === '' || selectedType === 'all') && !searchQuery && (
+      {showFeaturedHeader && (
         <div className="flex flex-col md:flex-row justify-between items-center mb-12">
           <h2 className="text-3xl font-bold">Featured Collection</h2>
           <div className="flex space-x-2 mt-4 md:mt-0">
@@ -227,29 +207,24 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
         </div>
       ) : isHomePage ? (
         <div className="space-y-6">
-          {/* First Row - Left to Right */}
           <div className="flex gap-4 pb-4 scrollbar-hide overflow-hidden">
             <div className="flex gap-4 animate-scroll-left">
               {sortedProducts.slice(0, Math.ceil(sortedProducts.length / 2)).map((product) => (
                 <ProductCard key={product.id} product={product} isHomePage={true} />
               ))}
             </div>
-            {/* Duplicate for seamless loop */}
             <div className="flex gap-4 animate-scroll-left">
               {sortedProducts.slice(0, Math.ceil(sortedProducts.length / 2)).map((product) => (
                 <ProductCard key={`duplicate-${product.id}`} product={product} isHomePage={true} />
               ))}
             </div>
-      </div>
-      
-          {/* Second Row - Right to Left */}
+          </div>
           <div className="flex gap-4 pb-4 scrollbar-hide overflow-hidden">
             <div className="flex gap-4 animate-scroll-right">
               {sortedProducts.slice(Math.ceil(sortedProducts.length / 2)).map((product) => (
                 <ProductCard key={product.id} product={product} isHomePage={true} />
               ))}
             </div>
-            {/* Duplicate for seamless loop */}
             <div className="flex gap-4 animate-scroll-right">
               {sortedProducts.slice(Math.ceil(sortedProducts.length / 2)).map((product) => (
                 <ProductCard key={`duplicate-${product.id}`} product={product} isHomePage={true} />
@@ -262,7 +237,7 @@ export default function ProductGrid({ selectedCategory = 'all', selectedType = '
           {sortedProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
-      </div>
+        </div>
       )}
     </section>
   );
